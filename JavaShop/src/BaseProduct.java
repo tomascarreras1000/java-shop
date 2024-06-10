@@ -1,11 +1,14 @@
+import java.util.LinkedList;
+
 public class BaseProduct extends Product {
     private float maxRetailPrice;
-
+    private LinkedList<ProductReview> reviews;
     private BaseProduct(String name, String brand, Category category, float maxRetailPrice) {
         this.name = name;
         this.brand = brand;
         this.category = category;
         this.maxRetailPrice = maxRetailPrice;
+        reviews = new LinkedList<ProductReview>();
     }
 
     /** Throws exception if the provided price exceeds maxRetailPrice */
@@ -15,4 +18,5 @@ public class BaseProduct extends Product {
         }
         return new RetailProduct(name, brand, category, price);
     }
+    public void addReview(ProductReview review) {reviews.add(review);}
 }
