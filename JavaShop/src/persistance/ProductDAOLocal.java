@@ -3,6 +3,7 @@ package persistance;
 import business.Product;
 import com.google.gson.Gson;
 import exceptions.LocalFilesException;
+import exceptions.OriginalProductNotFoundException;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -12,24 +13,21 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-
 public class ProductDAOLocal {
-
     private Gson gson;
 
     public ProductDAOLocal() {
         this.gson = new Gson();
     }
 
-
-    public Product[] readProduct() {
+    public ArrayList<Product> getProducts() throws LocalFilesException {
         Product[] products = null;
         FileReader reader = null;
         try {
             reader = new FileReader("files/products.json");
             products = gson.fromJson(reader, Product[].class);
         } catch (FileNotFoundException e) {
-            System.out.println("Error: The products.json file can’t be accessed.");
+            throw new LocalFilesException("Error: The products.json file can’t be accessed.");
         } finally {
             if (reader != null) {
                 try {
@@ -39,18 +37,16 @@ public class ProductDAOLocal {
                 }
             }
         }
-        return products;
+        return new ArrayList<>(Arrays.asList(products));
     }
 
-
-    public void writeProduct(Product product) {
-        Product[] products = readProduct();
-        ArrayList<Product> list = new ArrayList<>(Arrays.asList(products));
+    public void writeProduct(Product product) throws LocalFilesException {
+        ArrayList<Product> list = getProducts();
         list.add(product);
         updateProducts(list);
     }
 
-    public void updateProducts(List<Product> productList) {
+    public void updateProducts(List<Product> productList) throws LocalFilesException {
         FileWriter writer = null;
         try {
             writer = new FileWriter("files/products.json");
@@ -58,36 +54,20 @@ public class ProductDAOLocal {
             writer.flush();
             writer.close();
         } catch (FileNotFoundException e) {
-            System.out.println("Error writing in file!");
+            throw new LocalFilesException("Error writing in file!");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
-
-
-
-
-
-    public void removeProduct(int productPosition) {
-        //try {
-            Product[] products = readProduct();
-            ArrayList<Product> productList = new ArrayList<>(Arrays.asList(products));
-
-            if (productPosition < 0 || productPosition >= productList.size()) {
-                //throw new ProductPositionException(productPosition);
-            }
-
-            productList.remove(productPosition);
-            updateProducts(productList);
-        //} catch (ProductPositionException e) {
-        //    System.err.println(e.getMessage());
-        //}
+    public void removeProduct(Product product) throws LocalFilesException {
+        ArrayList<Product> productList = getProducts();
+        productList.remove(product);
+        updateProducts(productList);
     }
 
-
-    public Product getProductByNameAndBrand(String productName, String productBrand) {
-        Product[] products = readProduct();
+    public Product getProductByNameAndBrand(String productName, String productBrand) throws LocalFilesException {
+        ArrayList<Product> products = getProducts();
         for (Product product : products) {
             if (product.getName().equalsIgnoreCase(productName) && product.getName().equalsIgnoreCase(productBrand)) {
                 return product;
@@ -95,20 +75,26 @@ public class ProductDAOLocal {
         }
         return null;
     }
-    public void updateProduct(Product productToUpdate) {
-        Product[] products = readProduct();
-        for (int i = 0; i < products.length; i++) {
-            if (products[i].getName().equalsIgnoreCase(productToUpdate.getName())
-                    && products[i].getName().equalsIgnoreCase(productToUpdate.getName())) {
-                products[i] = productToUpdate;
-                updateProducts(Arrays.asList(products));
+
+    public void updateProduct(Product updatedProduct) throws LocalFilesException, OriginalProductNotFoundException {
+        ArrayList<Product> products = getProducts();
+        for (Product p : products) {
+            if (compareProducts(p, updatedProduct)) {
+                products.set(products.indexOf(p), updatedProduct);
+                updateProducts(products);
                 return;
             }
         }
-
+        throw new OriginalProductNotFoundException("Error: The product can’t be updated.");
     }
 
-    public void check() throws LocalFilesException {
-        //TODO: Implement this method
+    public void checkStatus() throws LocalFilesException {
+        if (getProducts() == null) {
+            throw new LocalFilesException("Error: The products.json file can’t be accessed.");
+        }
+    }
+
+    private boolean compareProducts(Product product1, Product product2) {
+        return product1.getName().equals(product2.getName()) && product1.getBrand().equals(product2.getBrand());
     }
 }

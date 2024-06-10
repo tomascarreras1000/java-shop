@@ -1,5 +1,6 @@
 import exceptions.APINotWorkingException;
 import exceptions.LocalFilesException;
+import exceptions.PersistanceException;
 import persistance.ProductDAO;
 import persistance.ProductDAOAPI;
 import persistance.ProductDAOLocal;
@@ -18,19 +19,19 @@ public class Main {
         System.out.println("Checking API status...\n");
         ProductDAOAPI productDAOAPI = new ProductDAOAPI();
         try {
-            productDAOAPI.checkAPIStatus();
+            productDAOAPI.checkStatus();
         } catch (APINotWorkingException e) {
-            System.out.println("Error: The API isn’t available.\n");
+            System.out.println(e.getMessage());
         }
 
+
+        // Check if local data can be accessed
         System.out.println("Verifying local files...");
         ProductDAOLocal productDAOLocal = new ProductDAOLocal();
         try {
-            productDAOLocal.check();
-        } catch (LocalFilesException e) {
-            System.out.println("Error: The products.json file can’t be accessed.\n");
+            productDAOLocal.checkStatus();
+        } catch (PersistanceException e) {
+            System.out.println(e.getMessage());
         }
-
-
     }
 }

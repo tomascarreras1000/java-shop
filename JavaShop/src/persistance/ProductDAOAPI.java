@@ -215,7 +215,7 @@ public class ProductDAOAPI {
         return null;
     }
 
-    public void checkAPIStatus() throws APINotWorkingException{
+    public void checkStatus() throws APINotWorkingException{
         try {
             URL url = new URL(String.format(API_URL_TEMPLATE_PRODUCTS, groupId));
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -224,7 +224,7 @@ public class ProductDAOAPI {
 
             int responseCode = connection.getResponseCode();
             if (responseCode == HttpURLConnection.HTTP_OK) // API is up and running!
-                throw new APINotWorkingException();
+                throw new APINotWorkingException("Error: The API isn’t available.\n");
         } catch (IOException e) {
             e.printStackTrace();
         }

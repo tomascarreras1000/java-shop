@@ -10,6 +10,10 @@ public abstract class Product {
         return this.name;
     }
 
+    public String getBrand() {
+        return this.brand;
+    }
+
     public enum Category {
         GENERAL,
         REDUCED,

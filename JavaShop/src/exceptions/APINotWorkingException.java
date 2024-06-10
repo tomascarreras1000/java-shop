@@ -1,4 +1,7 @@
 package exceptions;
 
-public class APINotWorkingException extends Throwable {
+public class APINotWorkingException extends PersistanceException {
+    public APINotWorkingException(String s) {
+        super(s);
+    }
 }
