@@ -1,3 +1,5 @@
+package business;
+
 public class ProductReview {
     private final String text;
     private final int stars;

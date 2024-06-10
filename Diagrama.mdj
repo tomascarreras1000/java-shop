@@ -63,7 +63,7 @@
 											"top": 535,
 											"width": 98.63623046875,
 											"height": 13,
-											"text": "BaseProduct"
+											"text": "business.BaseProduct"
 										},
 										{
 											"_type": "LabelView",
@@ -2531,7 +2531,7 @@
 											"top": 535,
 											"width": 84.5126953125,
 											"height": 13,
-											"text": "RetailProduct"
+											"text": "business.RetailProduct"
 										},
 										{
 											"_type": "LabelView",
@@ -2722,7 +2722,7 @@
 											"top": 359,
 											"width": 98.63623046875,
 											"height": 13,
-											"text": "Product"
+											"text": "business.Product"
 										},
 										{
 											"_type": "LabelView",
@@ -7554,7 +7554,7 @@
 					"_parent": {
 						"$ref": "AAAAAAFF+qBWK6M3Z8Y="
 					},
-					"name": "BaseProduct",
+					"name": "business.BaseProduct",
 					"ownedElements": [
 						{
 							"_type": "UMLGeneralization",
@@ -8092,7 +8092,7 @@
 					"_parent": {
 						"$ref": "AAAAAAFF+qBWK6M3Z8Y="
 					},
-					"name": "RetailProduct",
+					"name": "business.RetailProduct",
 					"ownedElements": [
 						{
 							"_type": "UMLGeneralization",
@@ -8126,7 +8126,7 @@
 					"_parent": {
 						"$ref": "AAAAAAFF+qBWK6M3Z8Y="
 					},
-					"name": "Product",
+					"name": "business.Product",
 					"attributes": [
 						{
 							"_type": "UMLAttribute",

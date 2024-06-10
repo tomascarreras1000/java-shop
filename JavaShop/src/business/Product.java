@@ -1,3 +1,5 @@
+package business;
+
 public abstract class Product {
 
     protected String name;

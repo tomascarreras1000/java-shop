@@ -1,3 +1,5 @@
+package business;
+
 public class RetailProduct extends Product {
     private float retailPrice;
 

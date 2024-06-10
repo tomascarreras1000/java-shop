@@ -19,7 +19,6 @@ public class UI {
     }
     public void intro(){
         System.out.println("\nWelcome to elCofre Digital Shopping Experiences.\n");
-        System.out.println("Verifying local files...");
     }
     public void showMenu() {
         System.out.println("\n    1) Manage Products");
@@ -31,8 +30,8 @@ public class UI {
 
     }
     public void showProductsMenu() {
-        showMessage("\n    1) Create a Product");
-        showMessage("    2) Remove a Product");
+        showMessage("\n    1) Create a business.Product");
+        showMessage("    2) Remove a business.Product");
         showMessage("\n    3) Back");
     }
     public void showShopsMenu() {

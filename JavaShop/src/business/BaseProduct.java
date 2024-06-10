@@ -1,5 +1,7 @@
 import java.util.LinkedList;
 
+package business;
+
 public class BaseProduct extends Product {
     private float maxRetailPrice;
     private LinkedList<ProductReview> reviews;
