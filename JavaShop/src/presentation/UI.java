@@ -1,0 +1,100 @@
+package presentation;
+
+import java.util.InputMismatchException;
+import java.util.Scanner;
+
+public class UI {
+    private Scanner scanner;
+
+    public UI() {
+        this.scanner = new Scanner(System.in);
+    }
+    public void showArt() {
+        System.out.println("        ________      ____");
+        System.out.println("  ___  / / ____/___  / __/_______");
+        System.out.println(" / _ \\/ / /   / __ \\/ /_/ ___/ _ \\");
+        System.out.println("/  __/ / /___/ /_/ / __/ /  /  __/");
+        System.out.println("\\___/_/\\____/\\____/_/ /_/   \\___/");
+
+    }
+    public void intro(){
+        System.out.println("\nWelcome to elCofre Digital Shopping Experiences.\n");
+        System.out.println("Verifying local files...");
+    }
+    public void showMenu() {
+        System.out.println("\n    1) Manage Products");
+        System.out.println("    2) Manage Shops");
+        System.out.println("    3) Search Products");
+        System.out.println("    4) List Shops");
+        System.out.println("    5) Your Cart\n");
+        System.out.println("    6) Exit\n");
+
+    }
+    public void showProductsMenu() {
+        showMessage("\n    1) Create a Product");
+        showMessage("    2) Remove a Product");
+        showMessage("\n    3) Back");
+    }
+    public void showShopsMenu() {
+        showMessage("\n    1) Create a Shop");
+        showMessage("    2) Expand a Shop's Catalogue");
+        showMessage("    3) Reduce a Shop's Catalogue");
+        showMessage("\n    4) Back");
+    }
+    /**
+     * Generic helper function to ask the user for a String.
+     * @param message The message to show the user before asking for a string.
+     * @return The user's entered string.
+     */
+    public String askForString(String message) {
+        System.out.print(message);
+        return scanner.nextLine();
+    }
+    public String askForStringFormatted(String message) {
+        System.out.print(message);
+        return formatString(scanner.nextLine());
+    }
+    public void showMessage(String message) {
+        System.out.println(message);
+    }
+    public int askForInteger(String message) {
+        while (true) {
+            System.out.print(message);
+            try {
+                return scanner.nextInt();
+            } catch (InputMismatchException e) {
+                System.out.println("\nError, please enter a valid integer.\n");
+            } finally {
+                scanner.nextLine();
+            }
+        }
+    }
+    public double askForDouble (String message) {
+        do {
+            System.out.print(message);
+            try {
+                return scanner.nextDouble();
+            } catch (InputMismatchException e) {
+                System.out.println("\nError, please enter a number.\n");
+            } finally {
+                scanner.nextLine();
+            }
+        } while (true);
+    }
+    public boolean confirm(String message) {
+        System.out.print(message);
+        return scanner.nextLine().equalsIgnoreCase("Yes");
+    }
+
+    private String formatString(String string) {
+        String[] words = string.toLowerCase().split("\\s+");
+        StringBuilder formattedProductBrand = new StringBuilder();
+
+        for (String word : words) {
+            String formattedWord = word.substring(0, 1).toUpperCase() + word.substring(1);
+            formattedProductBrand.append(formattedWord).append(" ");
+        }
+
+        return formattedProductBrand.toString().trim();
+    }
+}
