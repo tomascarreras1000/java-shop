@@ -10,6 +10,8 @@ public class Shop {
     private BusinessModel businessModel;
     private LinkedList<RetailProduct> catalogue;
 
+
+
     public enum BusinessModel {
         MAXIMUM_BENEFITS,
         LOYALTY,

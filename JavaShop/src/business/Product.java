@@ -6,6 +6,10 @@ public abstract class Product {
     protected String brand;
     protected Category category;
 
+    public String getName() {
+        return this.name;
+    }
+
     public enum Category {
         GENERAL,
         REDUCED,

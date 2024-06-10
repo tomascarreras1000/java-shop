@@ -63,7 +63,7 @@ public class ShopDAOLocal {
     public void updateShop(Shop shopToUpdate) {
         Shop[] shops = readShop();
         for (int i = 0; i < shops.length; i++) {
-            if (shops[i].getShopName() != null && shops[i].getShopName().equals(shopToUpdate.getShopName())) {
+            if (shops[i].getName() != null && shops[i].getName().equals(shopToUpdate.getName())) {
                 shops[i] = shopToUpdate;
                 updateShops(Arrays.asList(shops));
                 return;

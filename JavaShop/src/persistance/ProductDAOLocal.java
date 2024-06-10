@@ -1,8 +1,6 @@
 package persistance;
 
 import business.Product;
-import exceptions.BusinessException;
-import exceptions.ProductPositionException;
 import com.google.gson.Gson;
 import exceptions.LocalFilesException;
 
@@ -71,27 +69,27 @@ public class ProductDAOLocal {
 
 
 
-    public void removeProduct(int productPosition) throws BusinessException {
-        try {
+    public void removeProduct(int productPosition) {
+        //try {
             Product[] products = readProduct();
             ArrayList<Product> productList = new ArrayList<>(Arrays.asList(products));
 
             if (productPosition < 0 || productPosition >= productList.size()) {
-                throw new ProductPositionException(productPosition);
+                //throw new ProductPositionException(productPosition);
             }
 
             productList.remove(productPosition);
             updateProducts(productList);
-        } catch (ProductPositionException e) {
-            System.err.println(e.getMessage());
-        }
+        //} catch (ProductPositionException e) {
+        //    System.err.println(e.getMessage());
+        //}
     }
 
 
     public Product getProductByNameAndBrand(String productName, String productBrand) {
         Product[] products = readProduct();
         for (Product product : products) {
-            if (product.getProductName().equalsIgnoreCase(productName) && product.getProductBrand().equalsIgnoreCase(productBrand)) {
+            if (product.getName().equalsIgnoreCase(productName) && product.getName().equalsIgnoreCase(productBrand)) {
                 return product;
             }
         }
@@ -100,8 +98,8 @@ public class ProductDAOLocal {
     public void updateProduct(Product productToUpdate) {
         Product[] products = readProduct();
         for (int i = 0; i < products.length; i++) {
-            if (products[i].getProductName().equalsIgnoreCase(productToUpdate.getProductName())
-                    && products[i].getProductBrand().equalsIgnoreCase(productToUpdate.getProductBrand())) {
+            if (products[i].getName().equalsIgnoreCase(productToUpdate.getName())
+                    && products[i].getName().equalsIgnoreCase(productToUpdate.getName())) {
                 products[i] = productToUpdate;
                 updateProducts(Arrays.asList(products));
                 return;

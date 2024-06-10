@@ -11,7 +11,7 @@ public class Controller {
         do {
             ui.showMenu();
             option = ui.askForInteger("\nChoose an option: ");
-            executeMainMenu(option);
+            //executeMainMenu(option);
         } while (option != 6);
     }
 }

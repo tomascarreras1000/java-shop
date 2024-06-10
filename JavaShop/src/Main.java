@@ -30,5 +30,7 @@ public class Main {
         } catch (LocalFilesException e) {
             System.out.println("Error: The products.json file can’t be accessed.\n");
         }
+
+
     }
 }
