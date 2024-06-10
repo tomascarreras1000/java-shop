@@ -1,3 +1,5 @@
+package business;
+
 import java.util.LinkedList;
 
 public class Shop {

@@ -1,8 +1,8 @@
 package persistance;
 
 import business.Product;
-import business.exceptions.BusinessException;
-import business.exceptions.ProductPositionException;
+import exceptions.BusinessException;
+import exceptions.ProductPositionException;
 import com.google.gson.Gson;
 import exceptions.LocalFilesException;
 

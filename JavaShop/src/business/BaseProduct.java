@@ -1,6 +1,6 @@
-import java.util.LinkedList;
-
 package business;
+
+import java.util.LinkedList;
 
 public class BaseProduct extends Product {
     private float maxRetailPrice;
