@@ -26,9 +26,15 @@ public class ShopDAOLocal implements ShopDAO {
                 for (JsonElement element : jsonElement.getAsJsonArray()) {
                     if (element.isJsonObject()) {
                         JsonObject shopObject = element.getAsJsonObject();
+
+                        LinkedList<RetailProduct> list = new LinkedList();
+                        for (JsonElement e : shopObject.get("catalogue").getAsJsonArray()) {
+                            list.add(new RetailProduct(e.getAsJsonObject().get("name").getAsString(),e.getAsJsonObject().get("brand").getAsString(), e.getAsJsonObject().get("category").getAsString(), e.getAsJsonObject().get("retailPrice").getAsFloat()));
+                        }
+
                         switch (shopObject.get("businessModel").getAsString()) {
                             case "SPONSORED":
-                                SponsoredShop sponsoredShop = new SponsoredShop(shopObject.get("name").getAsString(), shopObject.get("description").getAsString(), shopObject.get("since").getAsInt(), shopObject.get("earnings").getAsFloat(), shopObject.get("sponsorBrand").getAsString(), new LinkedList(Arrays.asList(shopObject.get("catalogue").getAsJsonArray())));
+                                SponsoredShop sponsoredShop = new SponsoredShop(shopObject.get("name").getAsString(), shopObject.get("description").getAsString(), shopObject.get("since").getAsInt(), shopObject.get("earnings").getAsFloat(), shopObject.get("sponsorBrand").getAsString(), list);
                                 shops.add(sponsoredShop);
                                 break;
                             case "LOYALTY":
