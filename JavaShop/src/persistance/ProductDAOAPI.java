@@ -5,6 +5,7 @@ import business.Product;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import exceptions.APINotWorkingException;
+import exceptions.LocalFilesException;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -28,8 +29,7 @@ public class ProductDAOAPI implements ProductDAO{
     public ProductDAOAPI() {
         this.gson = new Gson();
     }
-
-    public void createProduct(BaseProduct product) {
+    public void createProduct(BaseProduct product) throws LocalFilesException{
 
         try {
 
@@ -96,11 +96,6 @@ public class ProductDAOAPI implements ProductDAO{
     }
 
     @Override
-    public void writeProduct(BaseProduct product) {
-
-    }
-
-    @Override
     public void updateProducts(List<BaseProduct> productList) {
 
     }
@@ -116,7 +111,7 @@ public class ProductDAOAPI implements ProductDAO{
     }
 
     @Override
-    public void updateProduct(BaseProduct updatedProduct) {
+    public void updateProducts(BaseProduct updatedProduct) {
 
     }
 

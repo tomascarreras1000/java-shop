@@ -1,8 +1,6 @@
 package business;
 
-import exceptions.BusinessException;
 import exceptions.InvalidRetailPriceException;
-import exceptions.LocalFilesException;
 import exceptions.PersistanceException;
 import persistance.ProductDAO;
 
@@ -22,7 +20,7 @@ public class ProductManager {
             throw new Exception("Invalid category");
 
         BaseProduct newBaseProduct = new BaseProduct(name, brand, category, maxRetailPrice);
-        productDAO.writeProduct(newBaseProduct);
+        productDAO.createProduct(newBaseProduct);
     }
 
     public RetailProduct createRetailProductFromBaseProduct(BaseProduct baseProduct, float retailPrice) throws PersistanceException, InvalidRetailPriceException {

@@ -41,7 +41,7 @@ public class ProductDAOLocal implements ProductDAO {
         return new LinkedList<>(Arrays.asList(products));
     }
 
-    public void writeProduct(BaseProduct product) throws LocalFilesException {
+    public void createProduct(BaseProduct product) throws LocalFilesException {
         LinkedList<BaseProduct> list = getProducts();
         list.add(product);
         updateProducts(list);
@@ -80,7 +80,7 @@ public class ProductDAOLocal implements ProductDAO {
         return null;
     }
 
-    public void updateProduct(BaseProduct updatedProduct) throws LocalFilesException, OriginalProductNotFoundException {
+    public void updateProducts(BaseProduct updatedProduct) throws LocalFilesException, OriginalProductNotFoundException {
         LinkedList<BaseProduct> products = getProducts();
         for (BaseProduct p : products) {
             if (compareProducts(p, updatedProduct)) {
