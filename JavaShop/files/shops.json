@@ -1,55 +1,11 @@
 [
   {
-    "shopName": "CASA ALEX",
-    "shopDescription": "SANTS",
-    "shopFoundationYear": 2004,
-    "businessModel": "A",
-    "catalogue": {
-      "products": [
-        {
-          "productName": "MARINA",
-          "productBrand": "Martos",
-          "productMaxPrice": 23.0,
-          "productCategory": "A",
-          "reviews": []
-        }
-      ],
-      "productPrices": {
-        "MARINA": 3.0
-      }
-    },
-    "totalEarnings": 0.0
-  },
-  {
-    "shopName": "CASA FAI",
-    "shopDescription": "HOSPI",
-    "shopFoundationYear": 2000,
-    "businessModel": "B",
-    "catalogue": {
-      "products": [
-        {
-          "productName": "MARINA",
-          "productBrand": "Martos",
-          "productMaxPrice": 23.0,
-          "productCategory": "A",
-          "reviews": []
-        }
-      ],
-      "productPrices": {
-        "MARINA": 1.0
-      }
-    },
-    "totalEarnings": 0.0
-  },
-  {
-    "shopName": "Big Shop of Horrors",
-    "shopDescription": "We just sell regular plants, no funny business.",
-    "shopFoundationYear": 1960,
-    "businessModel": "b",
-    "catalogue": {
-      "products": [],
-      "productPrices": {}
-    },
-    "totalEarnings": 0.0
+    "name": "LaSuperTiendaDePepe",
+    "description": "Pepe tiene una tienda :)",
+    "since": 2001,
+    "earnings": 0.0,
+    "sponsorBrand": "ISIS",
+    "businessModel": "SPONSORED",
+    "catalogue": []
   }
 ]

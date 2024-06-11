@@ -187,7 +187,7 @@ public class Controller {
      * New shop menu
      * @throws Exception is an invalid business model is entered
      */
-    private void shopsOptionOne() throws Exception {
+    private void shopsOptionOne() throws PersistanceException, Exception {
         String shopName = ui.askForString("\nPlease enter the shop's name: ");
         String shopDescription = ui.askForString("Please enter the shop's description: ");
         int shopFoundationYear = ui.askForInteger("Please enter the shop's founding year: ");
@@ -235,7 +235,7 @@ public class Controller {
         ui.showMessage("\"" + productName + "\" by \""+ productBrand + "\" is now being sold at \"" + shopName + "\".");
     }
 
-    private void shopsOptionThree() throws Exception {
+    private void shopsOptionThree() throws PersistanceException, Exception {
         String shopName = ui.askForString("Please enter the shop’s name: ");
         Shop shop = shopManager.findShopByName(shopName);
         LinkedList<RetailProduct> catalog = shop.getCatalogue();

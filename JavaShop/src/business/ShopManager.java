@@ -1,32 +1,32 @@
 package business;
 
 import exceptions.BusinessException;
+import exceptions.LocalFilesException;
+import exceptions.PersistanceException;
 import exceptions.ProductAlreadyExistsException;
 import persistance.ShopDAO;
 
 import java.util.LinkedList;
 
 public class ShopManager {
-    private LinkedList<Shop> shops;
     private ShopDAO shopDAO;
     public ShopManager(ShopDAO shopDAO) {
         this.shopDAO = shopDAO;
-        shops = new LinkedList<>();
     }
 
-    public void createShop(String name, String description, int since) {
+    public void createShop(String name, String description, int since) throws PersistanceException {
         Shop shop = new MaxProfitShop(name, description, since);
-        shops.add(shop);
+        shopDAO.createShop(shop);
     }
 
-    public void createShop(String name, String description, int since, float loyaltyThreshold) {
+    public void createShop(String name, String description, int since, float loyaltyThreshold) throws PersistanceException{
         Shop shop = new LoyaltyShop(name, description, since, loyaltyThreshold);
-        shops.add(shop);
+        shopDAO.createShop(shop);
     }
 
-    public void createShop(String name, String description, int since, String sponsorBrand) {
+    public void createShop(String name, String description, int since, String sponsorBrand)throws PersistanceException {
         Shop shop = new SponsoredShop(name, description, since, sponsorBrand);
-        shops.add(shop);
+        shopDAO.createShop(shop);
     }
 
     public String getBusinessModelFromOptions(String option) {
@@ -46,9 +46,9 @@ public class ShopManager {
      * @param name
      * @return
      */
-    public Shop findShopByName(String name) {
+    public Shop findShopByName(String name) throws PersistanceException {
         Shop returnShop = null;
-        for (Shop shop : shops) {
+        for (Shop shop : shopDAO.readShop()) { // TODO: CHANGE FUNCTION NAME
             if (shop.getName().equals(name)) {
                 returnShop = shop;
                 break;
@@ -57,17 +57,18 @@ public class ShopManager {
         return returnShop;
     }
 
-    public void removeShop(Shop shop) {
-        shops.remove(shop);
+    public void removeShop(Shop shop) throws PersistanceException {
+        shopDAO.removeShop(shop);
     }
 
-    public void addProductToShop(String shopName, RetailProduct product) throws BusinessException {
-        for (Shop shop : shops) {
+    public void addProductToShop(String shopName, RetailProduct product) throws BusinessException, PersistanceException {
+        for (Shop shop : shopDAO.readShop()) {
             if (shop.getName().equalsIgnoreCase(shopName)) {
                 for (RetailProduct retailProduct : shop.getCatalogue())
                     if (retailProduct.getName().equalsIgnoreCase(product.getName()))
                         throw new ProductAlreadyExistsException();
                 shop.addProduct(product);
+                shopDAO.updateShops(shop);
             }
         }
     }
@@ -80,8 +81,8 @@ public class ShopManager {
             throw new Exception("\nERROR Product does not belong to shop.");
     }
 
-    public void removeBaseProduct(BaseProduct productToRemove) {
-        for (Shop shop : shops) {
+    public void removeBaseProduct(BaseProduct productToRemove) throws PersistanceException {
+        for (Shop shop : shopDAO.readShop()) {
             for (RetailProduct retailProduct : shop.getCatalogue())
                 if (retailProduct.getName().equalsIgnoreCase(productToRemove.getName()))
                     shop.removeProduct(retailProduct);

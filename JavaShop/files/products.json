@@ -1,1 +1,9 @@
-[]
+[
+    {
+        "maxRetailPrice": 20.0,
+        "reviews": [],
+        "name": "IED",
+        "brand": "ISIS S.A",
+        "category": "Reduced"
+    }
+]

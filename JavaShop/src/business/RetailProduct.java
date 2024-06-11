@@ -6,12 +6,10 @@ public class RetailProduct extends Product {
     /**
      * Throws exception if the provided price is negative
      */
-    public RetailProduct(String name, String brand, String category, float retailPrice) throws Exception {
+    public RetailProduct(String name, String brand, String category, float retailPrice) {
         this.name = name;
         this.brand = brand;
         this.category = category;
-        if (retailPrice < 0)
-            throw new Exception("Invalid retail price");
         this.retailPrice = retailPrice;
     }
 
