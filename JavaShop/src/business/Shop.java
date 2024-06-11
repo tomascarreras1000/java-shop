@@ -7,23 +7,13 @@ public class Shop {
     private String description;
     private int since;
     private float earnings;
-    private BusinessModel businessModel;
     private LinkedList<RetailProduct> catalogue;
 
-
-
-    public enum BusinessModel {
-        MAXIMUM_BENEFITS,
-        LOYALTY,
-        SPONSORED
-    }
-
-    public Shop(String name, String description, int since, float earnings, BusinessModel businessModel) {
+    public Shop(String name, String description, int since, float earnings) {
         this.name = name;
         this.description = description;
         this.since = since;
         this.earnings = earnings;
-        this.businessModel = businessModel;
         catalogue = new LinkedList<RetailProduct>();
     }
     public void addProduct(RetailProduct product) {

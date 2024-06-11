@@ -1,4 +1,3 @@
-import business.BaseProduct;
 import business.CartManager;
 import business.ProductManager;
 import business.ShopManager;

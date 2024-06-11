@@ -119,11 +119,6 @@ public class ProductDAOAPI implements ProductDAO{
 
     }
 
-    @Override
-    public boolean compareProducts(Product product1, Product product2) {
-        return false;
-    }
-
     //si voleu buscar nomes per nom poseu els altres parametres a null
     public List<Product> searchProducts(String name, String brand, Double mrp, String category) {
         Gson gson = new Gson();
