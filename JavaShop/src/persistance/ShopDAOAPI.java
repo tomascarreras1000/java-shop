@@ -5,6 +5,7 @@ import business.Shop;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import exceptions.APINotWorkingException;
+import exceptions.LocalFilesException;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -13,6 +14,7 @@ import java.io.OutputStream;
 import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.StringJoiner;
 
@@ -220,5 +222,35 @@ public class ShopDAOAPI implements ShopDAO{
     public void checkStatus() throws APINotWorkingException {
         //TODO: Implement this method
         throw new APINotWorkingException("API is not working");
+    }
+
+    @Override
+    public LinkedList<Shop> readShop() throws LocalFilesException {
+        return null;
+    }
+
+    @Override
+    public void removeShop(int shopPosition) throws LocalFilesException {
+
+    }
+
+    @Override
+    public void removeShop(Shop shopToRemove) throws LocalFilesException {
+
+    }
+
+    @Override
+    public void removeShop(String shopName) throws LocalFilesException {
+
+    }
+
+    @Override
+    public void updateShops(Shop shopToUpdate) throws LocalFilesException {
+
+    }
+
+    @Override
+    public void updateShops(List<Shop> shopList) {
+
     }
 }
