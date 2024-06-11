@@ -179,11 +179,39 @@ public class Controller {
                 " \tB) Loyalty\n" +
                 " \tC) Sponsored");
         String shopBusinessModel = ui.askForString("\nPlease pick the shop’s business model: ");
-        shopManager.createShop(new Shop(shopName, shopDescription, shopFoundationYear, shopBusinessModel));
+        shopBusinessModel = shopManager.getBusinessModelFromOptions(shopBusinessModel);
+        if (shopBusinessModel == null) {
+            throw new Exception("\nERROR: Choose a valid business model!");
+        }
+        else if (shopBusinessModel.equals("Loyalty")) {
+            float loyaltyThreshold = (float) ui.askForDouble("\nPlease enter the shop's loyalty threshold: ");
+            shopManager.createShop(shopName, shopDescription, shopFoundationYear, loyaltyThreshold);
+        }
+        else if (shopBusinessModel.equals("Sponsored")) {
+            String sponsorBrand = ui.askForString("\nPlease enter the shop's sponsor brand: ");
+            shopManager.createShop(shopName, shopDescription, shopFoundationYear, sponsorBrand);
+        }
+        else {
+            shopManager.createShop(shopName, shopDescription, shopFoundationYear);
+        }
         ui.showMessage("\n\"" + shopName + "\" is now a part of the elCofre family.");
     }
 
+    private void OptionTwo() throws Exception {
+        String shopName = ui.askForString("\nPlease enter the shop's name: ");
+        String productName = ui.askForString("Please enter the product's name: ");
+        double currentPrice = ui.askForDouble("Please enter the product’s price at this shop: ");
 
+        Product product = productManager.findProductByName(productName);
+        if (product == null) {
+            throw new ProductNotFoundException(productName);
+        }
+        String productBrand = product.getProductBrand();
+
+        shopManager.addProductToShop(shopName, product, currentPrice);
+
+        ui.showMessage("\"" + productName + "\" by \""+ productBrand + "\" is now being sold at \"" + shopName + "\".");
+    }
 
     private void addBaseProduct(BaseProduct baseProduct) {
 

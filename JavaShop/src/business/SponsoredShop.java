@@ -10,4 +10,11 @@ public class SponsoredShop extends Shop {
         this.earnings = 0f;
         this.sponsorBrand = sponsorBrand;
     }
-}
+
+    public SponsoredShop(String name, String description, int since, float earnings, String sponsorBrand) {
+        this.name = name;
+        this.description = description;
+        this.since = since;
+        this.earnings = earnings;
+        this.sponsorBrand = sponsorBrand;
+    }}
