@@ -67,9 +67,9 @@ public class ProductDAOLocal implements ProductDAO{
         updateProducts(productList);
     }
 
-    public Product getProductByNameAndBrand(String productName, String productBrand) throws LocalFilesException {
+    public BaseProduct getProductByNameAndBrand(String productName, String productBrand) throws LocalFilesException {
         LinkedList<BaseProduct> products = getProducts();
-        for (Product product : products) {
+        for (BaseProduct product : products) {
             if (product.getName().equalsIgnoreCase(productName) && product.getName().equalsIgnoreCase(productBrand)) {
                 return product;
             }
@@ -79,7 +79,7 @@ public class ProductDAOLocal implements ProductDAO{
 
     public void updateProduct(BaseProduct updatedProduct) throws LocalFilesException, OriginalProductNotFoundException {
         LinkedList<BaseProduct> products = getProducts();
-        for (Product p : products) {
+        for (BaseProduct p : products) {
             if (compareProducts(p, updatedProduct)) {
                 products.set(products.indexOf(p), updatedProduct);
                 updateProducts(products);
