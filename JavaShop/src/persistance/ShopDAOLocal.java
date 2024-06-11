@@ -152,6 +152,7 @@ public class ShopDAOLocal implements ShopDAO {
         shopObject.addProperty("description", loyaltyShop.getDescription());
         shopObject.addProperty("since", loyaltyShop.getSince());
         shopObject.addProperty("earnings", loyaltyShop.getEarnings());
+        shopObject.addProperty("businessModel", "LOYALTY");
         shopObject.addProperty("loyaltyThreshold", loyaltyShop.getLoyaltyThreshold());
         shopObject.add("catalogue", gson.toJsonTree(loyaltyShop.getCatalogue()));
         return shopObject;
@@ -164,6 +165,7 @@ public class ShopDAOLocal implements ShopDAO {
         shopObject.addProperty("since", sponsoredShop.getSince());
         shopObject.addProperty("earnings", sponsoredShop.getEarnings());
         shopObject.addProperty("sponsorBrand", sponsoredShop.getSponsorBrand());
+        shopObject.addProperty("businessModel", "SPONSORED");
         shopObject.add("catalogue", gson.toJsonTree(sponsoredShop.getCatalogue()));
         return shopObject;
     }
@@ -174,6 +176,7 @@ public class ShopDAOLocal implements ShopDAO {
         shopObject.addProperty("description", maxProfitShop.getDescription());
         shopObject.addProperty("since", maxProfitShop.getSince());
         shopObject.addProperty("earnings", maxProfitShop.getEarnings());
+        shopObject.addProperty("businessModel", "MAX_PROFIT");
         shopObject.add("catalogue", gson.toJsonTree(maxProfitShop.getCatalogue()));
         return shopObject;
     }
