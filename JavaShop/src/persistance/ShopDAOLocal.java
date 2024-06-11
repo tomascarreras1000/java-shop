@@ -1,13 +1,9 @@
 package persistance;
 
 import business.*;
-import com.google.gson.Gson;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
+import com.google.gson.*;
 
 import java.io.*;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -49,62 +45,92 @@ public class ShopDAOLocal implements ShopDAO {
         return shops;
     }
 
-    public void writeShop(Shop shop) {
-        LinkedList<Shop> shops = readShop();
-        shops.add(shop);
-        updateShops(shops);
-    }
-
+    /**
+     * Removes a shop from the list of shops and updates the file
+     *
+     * @param shopPosition
+     */
     public void removeShop(int shopPosition) {
         LinkedList<Shop> shops = readShop();
         shops.remove(shopPosition);
         updateShops(shops);
     }
 
+    /**
+     * Removes a shop from the list of shops and updates the file
+     *
+     * @param shopToRemove
+     */
     public void removeShop(Shop shopToRemove) {
         LinkedList<Shop> shops = readShop();
         for (Shop shop : shops) {
-             if (shop.getName().equals(shopToRemove.getName())){
-                    shops.remove(shop);
-                    break;
-                }
+            if (shop.getName().equals(shopToRemove.getName())) {
+                shops.remove(shop);
+                break;
+            }
+        }
+        updateShops(shops);
+    }
+
+    /**
+     * Removes a shop from the list of shops and updates the file
+     *
+     * @param shopName
+     */
+    public void removeShop(String shopName) {
+        LinkedList<Shop> shops = readShop();
+        for (Shop shop : shops) {
+            if (shop.getName().equals(shopName)) {
+                shops.remove(shop);
+                break;
+            }
         }
         updateShops(shops);
     }
 
     /**
      * Updates a shop, replacing the old one with the new one in the list of shops and updating the file
+     *
      * @param shopToUpdate
      */
     public void updateShops(Shop shopToUpdate) {
         LinkedList<Shop> shops = readShop();
         for (Shop shop : shops) {
             if (shop.getName().equals(shopToUpdate.getName())) {
-                shops.set(shops.indexOf(shop), shopToUpdate);
-                updateShops(shops);
+                shops.remove(shop);
+                shops.add(shopToUpdate);
                 break;
             }
         }
+        updateShops(shops);
     }
 
     /**
      * Updates the list of shops in the file shops.json with the new list of shops passed as parameter shopList
+     *
      * @param shopList
      */
     public void updateShops(List<Shop> shopList) {
-        FileWriter writer = null;
-        try {
-            writer = new FileWriter("files/shops.json");
-            gson.toJson(shopList, writer);
-            writer.flush();
-            writer.close();
-        } catch (FileNotFoundException e) {
-            System.out.println("Error writing in file!");
+
+        JsonArray shopsArray = new JsonArray();
+
+        for (Shop shop : shopList) {
+            if (shop instanceof SponsoredShop) {
+                shopsArray.add(SponsoredShopToJsonObject((SponsoredShop) shop));
+            } else if (shop instanceof LoyaltyShop) {
+                shopsArray.add(LoyaltyShopToJsonObject((LoyaltyShop) shop));
+            } else if (shop instanceof MaxProfitShop) {
+                shopsArray.add(MaxProfitShopToJsonObject((MaxProfitShop) shop));
+            }
+        }
+
+        try (FileWriter writer = new FileWriter("files/shops.json")) {
+            Gson gson = new GsonBuilder().setPrettyPrinting().create();
+            gson.toJson(shopsArray, writer);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
         }
     }
-
 
     public JsonObject LoyaltyShopToJsonObject(LoyaltyShop loyaltyShop) {
         JsonObject shopObject = new JsonObject();
@@ -116,6 +142,7 @@ public class ShopDAOLocal implements ShopDAO {
         shopObject.add("catalogue", gson.toJsonTree(loyaltyShop.getCatalogue()));
         return shopObject;
     }
+
     public JsonObject SponsoredShopToJsonObject(SponsoredShop sponsoredShop) {
         JsonObject shopObject = new JsonObject();
         shopObject.addProperty("name", sponsoredShop.getName());
@@ -126,6 +153,7 @@ public class ShopDAOLocal implements ShopDAO {
         shopObject.add("catalogue", gson.toJsonTree(sponsoredShop.getCatalogue()));
         return shopObject;
     }
+
     public JsonObject MaxProfitShopToJsonObject(MaxProfitShop maxProfitShop) {
         JsonObject shopObject = new JsonObject();
         shopObject.addProperty("name", maxProfitShop.getName());
