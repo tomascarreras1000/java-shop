@@ -87,15 +87,15 @@ public class UI {
         }
     }
     /**
-     * Generic helper function to ask the user for a double (as many times as needed, until it's correct).
-     * @param message The message to show the user before asking for a double.
-     * @return A correct double entered by the user.
+     * Generic helper function to ask the user for a float (as many times as needed, until it's correct).
+     * @param message The message to show the user before asking for a float.
+     * @return A correct float entered by the user.
      */
-    public double askForDouble(String message) {
+    public float askForFloat(String message) {
         do {
             System.out.print(message);
             try {
-                return scanner.nextDouble();
+                return scanner.nextFloat();
             } catch (InputMismatchException e) {
                 System.out.println("\nError, please enter a number.\n");
             } finally {

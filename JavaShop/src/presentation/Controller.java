@@ -89,7 +89,7 @@ public class Controller {
     private void ProductsOptionOne() throws Exception {
         String productName = ui.askForString("\nPlease enter the product's name: ");
         String productBrand = ui.askForString("Please enter the product's brand: ");
-        double productMaxPrice = ui.askForDouble("Please enter the product's maximum retail price: ");
+        float productMaxPrice = ui.askForFloat("Please enter the product's maximum retail price: ");
 
         ui.showMessage("\nThe system supports the following product categories: ");
         ui.showMessage(" A) General\n" +
@@ -153,12 +153,15 @@ public class Controller {
     public void executeShopsMenu(int option) throws Exception{
         switch (option) {
             case 1:
+                // New shop menu
                 ShopsOptionOne();
                 break;
             case 2:
+                // Expand a shop's catalogue
                 ShopsOptionTwo();
                 break;
             case 3:
+                // Reduce a shop's catalogue
                 ShopsOptionThree();
                 break;
             case 4:
@@ -169,6 +172,10 @@ public class Controller {
         }
     }
 
+    /**
+     * New shop menu
+     * @throws Exception is an invalid business model is entered
+     */
     private void ShopsOptionOne() throws Exception {
         String shopName = ui.askForString("\nPlease enter the shop's name: ");
         String shopDescription = ui.askForString("Please enter the shop's description: ");
@@ -184,7 +191,7 @@ public class Controller {
             throw new Exception("\nERROR: Choose a valid business model!");
         }
         else if (shopBusinessModel.equals("Loyalty")) {
-            float loyaltyThreshold = (float) ui.askForDouble("\nPlease enter the shop's loyalty threshold: ");
+            float loyaltyThreshold = ui.askForFloat("\nPlease enter the shop's loyalty threshold: ");
             shopManager.createShop(shopName, shopDescription, shopFoundationYear, loyaltyThreshold);
         }
         else if (shopBusinessModel.equals("Sponsored")) {
@@ -197,14 +204,18 @@ public class Controller {
         ui.showMessage("\n\"" + shopName + "\" is now a part of the elCofre family.");
     }
 
-    private void OptionTwo() throws Exception {
+    /**
+     * Catalogue expansion menu
+     * @throws Exception
+     */
+    private void ShopsOptionTwo() throws Exception {
         String shopName = ui.askForString("\nPlease enter the shop's name: ");
         String productName = ui.askForString("Please enter the product's name: ");
-        double currentPrice = ui.askForDouble("Please enter the product’s price at this shop: ");
+        float currentPrice = ui.askForFloat("Please enter the product’s price at this shop: ");
 
         Product product = productManager.findProductByName(productName);
         if (product == null) {
-            throw new ProductNotFoundException(productName);
+            throw new Exception("\nERROR: Product not found");
         }
         String productBrand = product.getProductBrand();
 

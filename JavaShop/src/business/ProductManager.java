@@ -40,4 +40,20 @@ public class ProductManager {
     public LinkedList<BaseProduct> getBaseProducts() {
         return baseProducts;
     }
+
+    /**
+     * Finds a product with @param name 
+     * @param name
+     * @return
+     */
+    public Product findProductByName(String name) {
+        Product returnProduct = null;
+        for (BaseProduct baseProduct : baseProducts) {
+            if (baseProduct.getName().equals(name)) {
+                returnProduct = baseProduct;
+                break;
+            }
+        }
+        return returnProduct;
+    }
 }
