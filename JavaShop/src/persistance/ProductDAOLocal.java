@@ -61,7 +61,12 @@ public class ProductDAOLocal implements ProductDAO {
 
     public void removeProduct(BaseProduct product) throws LocalFilesException {
         LinkedList<BaseProduct> productList = getProducts();
-        productList.remove(product);
+        for (Product p : productList) {
+            if (compareProducts(p, product)) {
+                productList.remove(p);
+                break;
+            }
+        }
         updateProducts(productList);
     }
 
