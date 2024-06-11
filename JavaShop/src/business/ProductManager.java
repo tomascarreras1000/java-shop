@@ -21,6 +21,13 @@ public class ProductManager {
         baseProducts.add(newBaseProduct);
     }
 
+    public RetailProduct createRetailProductFromBaseProduct(BaseProduct baseProduct, float retailPrice) throws Exception {
+        if (retailPrice > baseProduct.getMaxRetailPrice())
+            throw new Exception("Invalid retail price");
+
+        return new RetailProduct(baseProduct, retailPrice);
+    }
+
     private String AssignCategory(String category) {
         if (category.equalsIgnoreCase("A")) {
             return "General";
@@ -42,12 +49,12 @@ public class ProductManager {
     }
 
     /**
-     * Finds a product with @param name 
+     * Finds a product with provided name. Note that this search is case-sensitive.
      * @param name
      * @return
      */
-    public Product findProductByName(String name) {
-        Product returnProduct = null;
+    public BaseProduct findProductByName(String name) {
+        BaseProduct returnProduct = null;
         for (BaseProduct baseProduct : baseProducts) {
             if (baseProduct.getName().equals(name)) {
                 returnProduct = baseProduct;

@@ -27,4 +27,8 @@ public class BaseProduct extends Product {
     public void addReview(ProductReview review) {
         reviews.add(review);
     }
+
+    public float getMaxRetailPrice() {
+        return maxRetailPrice;
+    }
 }
