@@ -5,10 +5,9 @@ import persistance.ShopDAO;
 import java.util.LinkedList;
 
 public class ShopManager {
-    private LinkedList<Shop> shops = new LinkedList<Shop>();
+    private LinkedList<Shop> shops;
     private ShopDAO shopDAO;
     public ShopManager(ShopDAO shopDAO) {
-        shops = new LinkedList<Shop>();
         this.shopDAO = shopDAO;
     }
 

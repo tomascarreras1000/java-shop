@@ -3,11 +3,11 @@ package business;
 import java.util.LinkedList;
 
 public abstract class Shop {
-    private String name;
-    private String description;
-    private int since;
-    private float earnings;
-    private LinkedList<RetailProduct> catalogue;
+    protected String name;
+    protected String description;
+    protected int since;
+    protected float earnings;
+    protected LinkedList<RetailProduct> catalogue;
 
     public void addProduct(RetailProduct product) {
         catalogue.add(product);
