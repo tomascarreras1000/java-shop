@@ -73,9 +73,10 @@ public class ShopManager {
         }
     }
 
-    public void removeRetailProductFromShop(Shop shop, RetailProduct productToRemove) throws Exception {
+    public void removeRetailProductFromShop(Shop shop, RetailProduct productToRemove) throws PersistanceException, Exception {
         if (shop.getCatalogue().contains(productToRemove)) {
             shop.getCatalogue().remove(productToRemove);
+            shopDAO.updateShops(shop);
         }
         else
             throw new Exception("\nERROR Product does not belong to shop.");
@@ -84,8 +85,10 @@ public class ShopManager {
     public void removeBaseProduct(BaseProduct productToRemove) throws PersistanceException {
         for (Shop shop : shopDAO.readShop()) {
             for (RetailProduct retailProduct : shop.getCatalogue())
-                if (retailProduct.getName().equalsIgnoreCase(productToRemove.getName()))
+                if (retailProduct.getName().equalsIgnoreCase(productToRemove.getName())) {
                     shop.removeProduct(retailProduct);
+                    shopDAO.updateShops(shop);
+                }
         }
     }
 }
