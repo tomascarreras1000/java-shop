@@ -1,12 +1,15 @@
 package business;
 
+import persistance.ShopDAO;
+
 import java.util.LinkedList;
 
 public class ShopManager {
     private LinkedList<Shop> shops = new LinkedList<Shop>();
-
-    public ShopManager() {
+    private ShopDAO shopDAO;
+    public ShopManager(ShopDAO shopDAO) {
         shops = new LinkedList<Shop>();
+        this.shopDAO = shopDAO;
     }
 
     public void addShop(Shop shop) {

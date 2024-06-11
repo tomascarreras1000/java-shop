@@ -2,8 +2,6 @@ import business.BaseProduct;
 import business.CartManager;
 import business.ProductManager;
 import business.ShopManager;
-import exceptions.APINotWorkingException;
-import exceptions.LocalFilesException;
 import exceptions.PersistanceException;
 import persistance.*;
 import presentation.Controller;
@@ -13,12 +11,7 @@ public class Main {
     public static void main(String[] args) {
 
         UI ui = new UI();
-        ProductManager productManager = new ProductManager();
-        CartManager cartManager = new CartManager();
-        ShopManager shopManager = new ShopManager();
-        Controller controller = new Controller(ui, productManager, cartManager, shopManager);
 
-        //TODO: check the interface casts
         ShopDAO shopDAO = new ShopDAOAPI();
         ProductDAO productDAO = new ProductDAOAPI();
 
@@ -30,7 +23,13 @@ public class Main {
         try {
             productDAO.checkStatus();
             shopDAO.checkStatus();
-            //TODO: Implement the rest of the code, add DAOS to managers
+
+            CartManager cartManager = new CartManager();
+            ProductManager productManager = new ProductManager(productDAO);
+            ShopManager shopManager = new ShopManager(shopDAO);
+            Controller controller = new Controller(ui, productManager, cartManager, shopManager);
+            controller.mainMenu();
+
         } catch (PersistanceException eAPI) {
             System.out.println(eAPI.getMessage());
 
@@ -41,7 +40,13 @@ public class Main {
             try {
                 productDAO.checkStatus();
                 shopDAO.checkStatus();
-                //TODO: Implement the rest of the code, add DAOS to managers
+
+                CartManager cartManager = new CartManager();
+                ShopManager shopManager = new ShopManager(shopDAO);
+                ProductManager productManager = new ProductManager(productDAO);
+                Controller controller = new Controller(ui, productManager, cartManager, shopManager);
+                controller.mainMenu();
+
             } catch (PersistanceException eLocal) {
                 System.out.println(eLocal.getMessage());
                 System.out.println("Shutting down...");
