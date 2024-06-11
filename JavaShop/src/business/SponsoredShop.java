@@ -23,4 +23,8 @@ public class SponsoredShop extends Shop {
         this.sponsorBrand = sponsorBrand;
         this.catalogue = catalogue;
     }
+
+    public String getSponsorBrand() {
+        return sponsorBrand;
+    }
 }

@@ -22,4 +22,8 @@ public class LoyaltyShop extends Shop {
         this.loyaltyThreshold = loyaltyThreshold;
         this.catalogue = catalogue;
     }
+
+    public float getLoyaltyThreshold() {
+        return loyaltyThreshold;
+    }
 }

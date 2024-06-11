@@ -19,4 +19,20 @@ public abstract class Shop {
     public String getName() {
         return name;
     }
+
+    public String getDescription() {
+        return description;
+    }
+    
+    public int getSince() {
+        return since;
+    }
+
+    public float getEarnings() {
+        return earnings;
+    }
+
+    public LinkedList<RetailProduct> getCatalogue() {
+        return catalogue;
+    }
 }
