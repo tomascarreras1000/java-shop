@@ -9,15 +9,34 @@ public class ProductManager {
     private ProductDAO productDAO;
 
     public ProductManager(ProductDAO productDAO) {
-        baseProducts = new LinkedList<BaseProduct>();
         this.productDAO = productDAO;
     }
-    public void addBaseProduct(BaseProduct baseProduct) {
-        baseProducts.add(baseProduct);
+
+    public void createBaseProduct(String name, String brand, String category, float maxRetailPrice) throws Exception {
+        category = AssignCategory(category);
+        if (category == null)
+            throw new Exception("Invalid category");
+
+        BaseProduct newBaseProduct = new BaseProduct(name, brand, category, maxRetailPrice);
+        baseProducts.add(newBaseProduct);
     }
+
+    private String AssignCategory(String category) {
+        if (category.equalsIgnoreCase("A")) {
+            return "General";
+        } else if (category.equalsIgnoreCase("B")) {
+            return "Reduced";
+        } else if (category.equalsIgnoreCase("C")) {
+            return "Super Reduced";
+        } else {
+            return null;
+        }
+    }
+
     public void removeBaseProduct(BaseProduct baseProduct) {
         baseProducts.remove(baseProduct);
     }
+
     public LinkedList<BaseProduct> getBaseProducts() {
         return baseProducts;
     }

@@ -9,22 +9,10 @@ public class BaseProduct extends Product {
     public BaseProduct(String name, String brand, String category, float maxRetailPrice) {
         this.name = name;
         this.brand = brand;
-        this.category = AssignCategory(category);
+        this.category = category;
         this.maxRetailPrice = maxRetailPrice;
         reviews = new LinkedList<ProductReview>();
     }
-
-    private String AssignCategory(String category) {
-        if (category.equalsIgnoreCase("A")) {
-            return "General";
-        } else if (category.equalsIgnoreCase("B")) {
-            return "Reduced";
-        } else if (category.equalsIgnoreCase("C")) {
-            return "Super Reduced";
-        } else
-            return null;
-    }
-
 
     /**
      * Throws exception if the provided price exceeds maxRetailPrice

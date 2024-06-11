@@ -6,9 +6,7 @@ import java.util.LinkedList;
 public class CartManager {
     private HashMap<String, LinkedList<RetailProduct>> cart;
 
-    public CartManager() {
-        cart = new HashMap<String, LinkedList<RetailProduct>>();
-    }
+    public CartManager() {}
     public void addProduct(RetailProduct product, Shop shop) {
         LinkedList<RetailProduct>productList = cart.get(shop.getName());
         productList.add(product);

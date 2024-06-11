@@ -37,7 +37,7 @@ public class Controller {
                 runProductsMenu();
                 break;
             case 2:
-                //shopController.runShopsMenu();
+                runShopsMenu();
                 break;
             case 3:
                 //optionThree();
@@ -86,7 +86,6 @@ public class Controller {
         }
     }
 
-
     private void ProductsOptionOne() throws Exception {
         String productName = ui.askForString("\nPlease enter the product's name: ");
         String productBrand = ui.askForString("Please enter the product's brand: ");
@@ -97,8 +96,7 @@ public class Controller {
                 " B) Reduced Taxes\n" +
                 " C) Superreduced Taxes");
         String productCategory = ui.askForString("\nPlease pick the product’s category: ");
-        BaseProduct baseProduct = new BaseProduct(productName, productBrand, productCategory, (float) productMaxPrice);
-        productManager.addBaseProduct(baseProduct);
+        productManager.createBaseProduct(productName, productBrand, productCategory, (float) productMaxPrice);
         ui.showMessage("\nThe product \"" + productName + "\" by \"" + productBrand + "\" was added to the system.");
     }
 
@@ -137,6 +135,55 @@ public class Controller {
             }
         }
     }
+
+
+    public void runShopsMenu() {
+        int option;
+        do {
+            ui.showShopsMenu();
+            option = ui.askForInteger("\nChoose an option: ");
+            try {
+                executeShopsMenu(option);
+            } catch (Exception e) {
+                ui.showMessage(e.getMessage());
+            }
+        } while (option != 4);
+    }
+
+    public void executeShopsMenu(int option) throws Exception{
+        switch (option) {
+            case 1:
+                ShopsOptionOne();
+                break;
+            case 2:
+                ShopsOptionTwo();
+                break;
+            case 3:
+                ShopsOptionThree();
+                break;
+            case 4:
+                break;
+            default:
+                ui.showMessage("\nInvalid option. Please enter a valid option!");
+                break;
+        }
+    }
+
+    private void ShopsOptionOne() throws Exception {
+        String shopName = ui.askForString("\nPlease enter the shop's name: ");
+        String shopDescription = ui.askForString("Please enter the shop's description: ");
+        int shopFoundationYear = ui.askForInteger("Please enter the shop's founding year: ");
+
+        ui.showMessage("\nThe system supports the following business models: \n");
+        ui.showMessage(" \tA) Maximum Benefits\n" +
+                " \tB) Loyalty\n" +
+                " \tC) Sponsored");
+        String shopBusinessModel = ui.askForString("\nPlease pick the shop’s business model: ");
+        shopManager.createShop(new Shop(shopName, shopDescription, shopFoundationYear, shopBusinessModel));
+        ui.showMessage("\n\"" + shopName + "\" is now a part of the elCofre family.");
+    }
+
+
 
     private void addBaseProduct(BaseProduct baseProduct) {
 
