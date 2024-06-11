@@ -4,7 +4,7 @@ public class RetailProduct extends Product {
     private float retailPrice;
 
     /** Throws exception if the provided price is negative */
-    public RetailProduct(String name, String brand, Category category, float retailPrice) throws Exception {
+    public RetailProduct(String name, String brand, String category, float retailPrice) throws Exception {
         this.name = name;
         this.brand = brand;
         this.category = category;

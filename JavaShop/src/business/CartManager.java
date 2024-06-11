@@ -5,6 +5,7 @@ import java.util.LinkedList;
 
 public class CartManager {
     private HashMap<String, LinkedList<RetailProduct>> cart;
+
     public CartManager() {
         cart = new HashMap<String, LinkedList<RetailProduct>>();
     }
@@ -18,5 +19,15 @@ public class CartManager {
         if (productList.isEmpty()) {
             cart.remove(shop.getName());
         }
+    }
+    public void removeProduct(Product productToRemove) {
+        for (LinkedList<RetailProduct> productList : cart.values()) {
+            for (int i = 0; i < productList.size(); i++) {
+                if (productList.get(i).getName().equals(productToRemove.getName())) {
+                    productList.remove(i);
+                }
+            }
+        }
+
     }
 }

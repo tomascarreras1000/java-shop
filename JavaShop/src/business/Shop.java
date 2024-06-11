@@ -29,7 +29,7 @@ public class Shop {
     public void addProduct(RetailProduct product) {
         catalogue.add(product);
     }
-    public void removeProduct(RetailProduct product) {
+    public void removeProduct(Product product) {
         catalogue.remove(product);
     }
 

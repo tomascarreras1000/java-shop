@@ -4,19 +4,19 @@ public abstract class Product {
 
     protected String name;
     protected String brand;
-    protected Category category;
+    protected String category;
 
     public String getName() {
-        return this.name;
+        return name;
     }
-
+    public String getCategory() {
+        return category;
+    }
     public String getBrand() {
-        return this.brand;
+        return brand;
     }
 
-    public enum Category {
-        GENERAL,
-        REDUCED,
-        SUPER_REDUCED
-    };
+    public String getDescription() {
+        return "\"" + name + "\" by \"" + brand +"\"";
+    }
 }

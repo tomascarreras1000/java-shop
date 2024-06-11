@@ -1,3 +1,7 @@
+import business.BaseProduct;
+import business.CartManager;
+import business.ProductManager;
+import business.ShopManager;
 import exceptions.APINotWorkingException;
 import exceptions.LocalFilesException;
 import exceptions.PersistanceException;
@@ -9,7 +13,10 @@ public class Main {
     public static void main(String[] args) {
 
         UI ui = new UI();
-        Controller controller = new Controller(ui);
+        ProductManager productManager = new ProductManager();
+        CartManager cartManager = new CartManager();
+        ShopManager shopManager = new ShopManager();
+        Controller controller = new Controller(ui, productManager, cartManager, shopManager);
 
         //TODO: check the interface casts
         ShopDAO shopDAOAPI = (ShopDAO) new ShopDAOAPI();
