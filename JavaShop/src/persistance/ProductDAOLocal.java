@@ -11,16 +11,17 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 
-public class ProductDAOLocal {
+public class ProductDAOLocal implements ProductDAO{
     private Gson gson;
 
     public ProductDAOLocal() {
         this.gson = new Gson();
     }
 
-    public ArrayList<Product> getProducts() throws LocalFilesException {
+    public LinkedList<Product> getProducts() throws LocalFilesException {
         Product[] products = null;
         FileReader reader = null;
         try {
@@ -37,11 +38,11 @@ public class ProductDAOLocal {
                 }
             }
         }
-        return new ArrayList<>(Arrays.asList(products));
+        return new LinkedList<>(Arrays.asList(products));
     }
 
     public void writeProduct(Product product) throws LocalFilesException {
-        ArrayList<Product> list = getProducts();
+        LinkedList<Product> list = getProducts();
         list.add(product);
         updateProducts(list);
     }
@@ -61,13 +62,13 @@ public class ProductDAOLocal {
     }
 
     public void removeProduct(Product product) throws LocalFilesException {
-        ArrayList<Product> productList = getProducts();
+        LinkedList<Product> productList = getProducts();
         productList.remove(product);
         updateProducts(productList);
     }
 
     public Product getProductByNameAndBrand(String productName, String productBrand) throws LocalFilesException {
-        ArrayList<Product> products = getProducts();
+        LinkedList<Product> products = getProducts();
         for (Product product : products) {
             if (product.getName().equalsIgnoreCase(productName) && product.getName().equalsIgnoreCase(productBrand)) {
                 return product;
@@ -77,7 +78,7 @@ public class ProductDAOLocal {
     }
 
     public void updateProduct(Product updatedProduct) throws LocalFilesException, OriginalProductNotFoundException {
-        ArrayList<Product> products = getProducts();
+        LinkedList<Product> products = getProducts();
         for (Product p : products) {
             if (compareProducts(p, updatedProduct)) {
                 products.set(products.indexOf(p), updatedProduct);
@@ -94,7 +95,7 @@ public class ProductDAOLocal {
         }
     }
 
-    private boolean compareProducts(Product product1, Product product2) {
+    public boolean compareProducts(Product product1, Product product2) {
         return product1.getName().equals(product2.getName()) && product1.getBrand().equals(product2.getBrand());
     }
 }

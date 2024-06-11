@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class ShopDAOLocal {
+public class ShopDAOLocal implements ShopDAO{
     private Gson gson;
 
     public ShopDAOLocal() {

@@ -12,10 +12,11 @@ import java.io.OutputStream;
 import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.StringJoiner;
 
-public class ProductDAOAPI {
+public class ProductDAOAPI implements ProductDAO{
 
     private Gson gson;
 
@@ -64,7 +65,7 @@ public class ProductDAOAPI {
         }
     }
 
-    public List<Product> getProducts() {
+    public LinkedList<Product> getProducts() {
 
         try {
             URL url = new URL(String.format(API_URL_TEMPLATE_PRODUCTS, groupId));
@@ -91,6 +92,36 @@ public class ProductDAOAPI {
             e.printStackTrace();
         }
         return null;
+    }
+
+    @Override
+    public void writeProduct(Product product) {
+
+    }
+
+    @Override
+    public void updateProducts(List<Product> productList) {
+
+    }
+
+    @Override
+    public void removeProduct(Product product) {
+
+    }
+
+    @Override
+    public Product getProductByNameAndBrand(String productName, String productBrand) {
+        return null;
+    }
+
+    @Override
+    public void updateProduct(Product updatedProduct) {
+
+    }
+
+    @Override
+    public boolean compareProducts(Product product1, Product product2) {
+        return false;
     }
 
     //si voleu buscar nomes per nom poseu els altres parametres a null

@@ -16,7 +16,7 @@ import java.net.URL;
 import java.util.List;
 import java.util.StringJoiner;
 
-public class ShopDAOAPI {
+public class ShopDAOAPI implements ShopDAO{
 
     private Gson gson;
 

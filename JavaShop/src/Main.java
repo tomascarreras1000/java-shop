@@ -19,8 +19,8 @@ public class Main {
         Controller controller = new Controller(ui, productManager, cartManager, shopManager);
 
         //TODO: check the interface casts
-        ShopDAO shopDAOAPI = (ShopDAO) new ShopDAOAPI();
-        ProductDAO productDAOAPI = (ProductDAO) new ProductDAOAPI();
+        ShopDAO shopDAO = new ShopDAOAPI();
+        ProductDAO productDAO = new ProductDAOAPI();
 
         ui.showArt();
         ui.intro();
@@ -28,19 +28,19 @@ public class Main {
         // Check if API is working
         System.out.println("Checking API status...\n");
         try {
-            productDAOAPI.checkStatus();
-            shopDAOAPI.checkStatus();
+            productDAO.checkStatus();
+            shopDAO.checkStatus();
             //TODO: Implement the rest of the code, add DAOS to managers
         } catch (PersistanceException eAPI) {
             System.out.println(eAPI.getMessage());
 
             // Check if local data can be accessed
             System.out.println("Verifying local files...");
-            ProductDAOLocal productDAOLocal = new ProductDAOLocal();
-            ShopDAOLocal shopDAOLocal = new ShopDAOLocal();
+            productDAO = new ProductDAOLocal();
+            shopDAO = new ShopDAOLocal();
             try {
-                productDAOLocal.checkStatus();
-                shopDAOLocal.checkStatus();
+                productDAO.checkStatus();
+                shopDAO.checkStatus();
                 //TODO: Implement the rest of the code, add DAOS to managers
             } catch (PersistanceException eLocal) {
                 System.out.println(eLocal.getMessage());
