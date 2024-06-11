@@ -23,5 +23,6 @@ public interface ShopDAO {
     void removeShop(Shop shopToRemove) throws LocalFilesException;
     void removeShop(String shopName) throws LocalFilesException;
     void updateShops(Shop shopToUpdate) throws LocalFilesException;
+    void createShop(Shop shop) throws LocalFilesException;
     void updateShops(List<Shop> shopList);
 }

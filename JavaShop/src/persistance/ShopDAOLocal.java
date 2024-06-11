@@ -140,6 +140,12 @@ public class ShopDAOLocal implements ShopDAO {
         }
     }
 
+    public void createShop(Shop shop) throws LocalFilesException{
+        LinkedList<Shop> shops = readShop();
+        shops.add(shop);
+        updateShops(shops);
+    }
+
     public JsonObject LoyaltyShopToJsonObject(LoyaltyShop loyaltyShop) {
         JsonObject shopObject = new JsonObject();
         shopObject.addProperty("name", loyaltyShop.getName());
