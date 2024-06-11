@@ -1,6 +1,7 @@
 package persistance;
 
 import business.Product;
+import business.SponsoredShop;
 import com.google.gson.Gson;
 import exceptions.LocalFilesException;
 import exceptions.OriginalProductNotFoundException;
@@ -94,7 +95,7 @@ public class ProductDAOLocal implements ProductDAO{
         }
     }
 
-    public boolean compareProducts(Product product1, Product product2) {
+    private boolean compareProducts(Product product1, Product product2) {
         return product1.getName().equals(product2.getName()) && product1.getBrand().equals(product2.getBrand());
     }
 }

@@ -35,4 +35,5 @@ public abstract class Shop {
     public LinkedList<RetailProduct> getCatalogue() {
         return catalogue;
     }
+
 }
