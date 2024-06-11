@@ -1,9 +1,7 @@
 import exceptions.APINotWorkingException;
 import exceptions.LocalFilesException;
 import exceptions.PersistanceException;
-import persistance.ProductDAO;
-import persistance.ProductDAOAPI;
-import persistance.ProductDAOLocal;
+import persistance.*;
 import presentation.Controller;
 import presentation.UI;
 
@@ -13,25 +11,34 @@ public class Main {
         UI ui = new UI();
         Controller controller = new Controller(ui);
 
+        //TODO: check the interface casts
+        ShopDAO shopDAOAPI = (ShopDAO) new ShopDAOAPI();
+        ProductDAO productDAOAPI = (ProductDAO) new ProductDAOAPI();
+
         ui.showArt();
         ui.intro();
 
+        // Check if API is working
         System.out.println("Checking API status...\n");
-        ProductDAOAPI productDAOAPI = new ProductDAOAPI();
         try {
             productDAOAPI.checkStatus();
-        } catch (APINotWorkingException e) {
-            System.out.println(e.getMessage());
-        }
+            shopDAOAPI.checkStatus();
+            //TODO: Implement the rest of the code, add DAOS to managers
+        } catch (PersistanceException eAPI) {
+            System.out.println(eAPI.getMessage());
 
-
-        // Check if local data can be accessed
-        System.out.println("Verifying local files...");
-        ProductDAOLocal productDAOLocal = new ProductDAOLocal();
-        try {
-            productDAOLocal.checkStatus();
-        } catch (PersistanceException e) {
-            System.out.println(e.getMessage());
+            // Check if local data can be accessed
+            System.out.println("Verifying local files...");
+            ProductDAOLocal productDAOLocal = new ProductDAOLocal();
+            ShopDAOLocal shopDAOLocal = new ShopDAOLocal();
+            try {
+                productDAOLocal.checkStatus();
+                shopDAOLocal.checkStatus();
+                //TODO: Implement the rest of the code, add DAOS to managers
+            } catch (PersistanceException eLocal) {
+                System.out.println(eLocal.getMessage());
+                System.out.println("Shutting down...");
+            }
         }
     }
 }

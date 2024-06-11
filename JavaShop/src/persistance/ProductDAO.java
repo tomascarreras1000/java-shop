@@ -1,12 +1,13 @@
 package persistance;
 
 import business.Product;
+import exceptions.PersistanceException;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public interface ProductDAO {
-    public void checkStatus();
+    public void checkStatus() throws PersistanceException;
     public ArrayList<Product> getProducts();
     public void writeProduct(Product product);
     public void updateProducts(List<Product> productList);

@@ -4,6 +4,7 @@ package persistance;
 import business.Shop;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import exceptions.APINotWorkingException;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -216,4 +217,8 @@ public class ShopDAOAPI {
         return null;
     }
 
+    public void checkStatus() throws APINotWorkingException {
+        //TODO: Implement this method
+        throw new APINotWorkingException("API is not working");
+    }
 }

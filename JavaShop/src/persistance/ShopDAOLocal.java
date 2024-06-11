@@ -77,4 +77,7 @@ public class ShopDAOLocal {
         Shop[] shops = readShop();
         return Arrays.asList(shops);
     }
+
+    public void checkStatus() {
+    }
 }
