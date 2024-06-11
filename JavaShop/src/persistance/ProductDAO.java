@@ -6,12 +6,13 @@ import exceptions.LocalFilesException;
 import exceptions.OriginalProductNotFoundException;
 import exceptions.PersistanceException;
 
+import java.io.FileNotFoundException;
 import java.util.LinkedList;
 import java.util.List;
 
 public interface ProductDAO {
     void checkStatus() throws PersistanceException;
-    LinkedList<BaseProduct> getProducts() throws LocalFilesException;
+    LinkedList<BaseProduct> getProducts() throws LocalFilesException, FileNotFoundException;
     void writeProduct(BaseProduct product) throws LocalFilesException;
     void updateProducts(List<BaseProduct> productList) throws LocalFilesException;
     void removeProduct(BaseProduct product) throws LocalFilesException;

@@ -18,7 +18,7 @@ public class Main {
         ui.intro();
 
         // Check if API is working
-        System.out.println("Checking API status...\n");
+        System.out.println("Checking API status...");
         try {
             productDAO.checkStatus();
             shopDAO.checkStatus();
@@ -48,7 +48,7 @@ public class Main {
 
             } catch (PersistanceException eLocal) {
                 System.out.println(eLocal.getMessage());
-                System.out.println("Shutting down...");
+                System.out.println("\nShutting down...");
             }
         }
     }

@@ -16,9 +16,9 @@ public class ShopDAOLocal implements ShopDAO {
         this.gson = new Gson();
     }
 
-    public LinkedList<Shop> readShop() {
+    public LinkedList<Shop> readShop() throws LocalFilesException{
         LinkedList<Shop> shops = new LinkedList<>();
-        try (FileReader reader = new FileReader("files/shops.json")) {
+        try (FileReader reader = new FileReader("JavaShop/files/shops.json")) {
             JsonParser parser = new JsonParser();
             JsonElement jsonElement = parser.parse(reader);
 
@@ -45,6 +45,8 @@ public class ShopDAOLocal implements ShopDAO {
                     }
                 }
             }
+        } catch (FileNotFoundException e) {
+            throw new LocalFilesException("Error: The shops.json file can’t be accessed.");
         } catch (IOException e) {
             shops = new LinkedList<>();
         }
@@ -56,10 +58,10 @@ public class ShopDAOLocal implements ShopDAO {
      *
      * @param shopPosition
      */
-    public void removeShop(int shopPosition) {
-        LinkedList<Shop> shops = readShop();
-        shops.remove(shopPosition);
-        updateShops(shops);
+    public void removeShop(int shopPosition) throws LocalFilesException{
+            LinkedList<Shop> shops = readShop();
+            shops.remove(shopPosition);
+            updateShops(shops);
     }
 
     /**
@@ -67,7 +69,7 @@ public class ShopDAOLocal implements ShopDAO {
      *
      * @param shopToRemove
      */
-    public void removeShop(Shop shopToRemove) {
+    public void removeShop(Shop shopToRemove) throws LocalFilesException{
         LinkedList<Shop> shops = readShop();
         for (Shop shop : shops) {
             if (shop.getName().equals(shopToRemove.getName())) {
@@ -83,7 +85,7 @@ public class ShopDAOLocal implements ShopDAO {
      *
      * @param shopName
      */
-    public void removeShop(String shopName) {
+    public void removeShop(String shopName) throws LocalFilesException{
         LinkedList<Shop> shops = readShop();
         for (Shop shop : shops) {
             if (shop.getName().equals(shopName)) {
@@ -99,7 +101,7 @@ public class ShopDAOLocal implements ShopDAO {
      *
      * @param shopToUpdate
      */
-    public void updateShops(Shop shopToUpdate) {
+    public void updateShops(Shop shopToUpdate) throws LocalFilesException{
         LinkedList<Shop> shops = readShop();
         for (Shop shop : shops) {
             if (shop.getName().equals(shopToUpdate.getName())) {
@@ -171,8 +173,6 @@ public class ShopDAOLocal implements ShopDAO {
     }
 
     public void checkStatus() throws LocalFilesException{
-        if(readShop().isEmpty()) {
-            throw new LocalFilesException("Error: The shops.json file can’t be accessed.");
-        }
+        readShop();
     }
 }

@@ -14,7 +14,7 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
-public class ProductDAOLocal implements ProductDAO{
+public class ProductDAOLocal implements ProductDAO {
     private Gson gson;
 
     public ProductDAOLocal() {
@@ -25,7 +25,7 @@ public class ProductDAOLocal implements ProductDAO{
         BaseProduct[] products = null;
         FileReader reader = null;
         try {
-            reader = new FileReader("files/products.json");
+            reader = new FileReader("JavaShop/files/products.json");
             products = gson.fromJson(reader, BaseProduct[].class);
         } catch (FileNotFoundException e) {
             throw new LocalFilesException("Error: The products.json file can’t be accessed.");
@@ -54,10 +54,8 @@ public class ProductDAOLocal implements ProductDAO{
             gson.toJson(productList, writer);
             writer.flush();
             writer.close();
-        } catch (FileNotFoundException e) {
-            throw new LocalFilesException("Error writing in file!");
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new LocalFilesException(e.getMessage());
         }
     }
 
@@ -90,9 +88,7 @@ public class ProductDAOLocal implements ProductDAO{
     }
 
     public void checkStatus() throws LocalFilesException {
-        if (getProducts() == null) {
-            throw new LocalFilesException("Error: The products.json file can’t be accessed.");
-        }
+        getProducts();
     }
 
     private boolean compareProducts(Product product1, Product product2) {
