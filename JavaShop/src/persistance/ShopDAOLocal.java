@@ -2,6 +2,7 @@ package persistance;
 
 import business.*;
 import com.google.gson.*;
+import exceptions.LocalFilesException;
 
 import java.io.*;
 import java.util.Arrays;
@@ -20,23 +21,28 @@ public class ShopDAOLocal implements ShopDAO {
         try (FileReader reader = new FileReader("files/shops.json")) {
             JsonParser parser = new JsonParser();
             JsonElement jsonElement = parser.parse(reader);
+
             if (jsonElement.isJsonArray()) {
-                JsonObject shopObject = jsonElement.getAsJsonObject();
-                switch (shopObject.get("businessModel").getAsString()) {
-                    case "SPONSORED":
-                        SponsoredShop sponsoredShop = new SponsoredShop(shopObject.get("name").getAsString(), shopObject.get("description").getAsString(), shopObject.get("since").getAsInt(), shopObject.get("earnings").getAsFloat(), shopObject.get("sponsorBrand").getAsString(), new LinkedList(Arrays.asList(shopObject.get("catalogue").getAsJsonArray())));
-                        shops.add(sponsoredShop);
-                        break;
-                    case "LOYALTY":
-                        LoyaltyShop loyaltyShop = new LoyaltyShop(shopObject.get("name").getAsString(), shopObject.get("description").getAsString(), shopObject.get("since").getAsInt(), shopObject.get("earnings").getAsFloat(), shopObject.get("loyaltyThreshold").getAsInt(), new LinkedList(Arrays.asList(shopObject.get("catalogue").getAsJsonArray())));
-                        shops.add(loyaltyShop);
-                        break;
-                    case "MAX_PROFIT":
-                        MaxProfitShop maxProfitShop = new MaxProfitShop(shopObject.get("name").getAsString(), shopObject.get("description").getAsString(), shopObject.get("since").getAsInt(), shopObject.get("earnings").getAsFloat(), new LinkedList(Arrays.asList(shopObject.get("catalogue").getAsJsonArray())));
-                        shops.add(maxProfitShop);
-                        break;
-                    default:
-                        break;
+                for (JsonElement element : jsonElement.getAsJsonArray()) {
+                    if (element.isJsonObject()) {
+                        JsonObject shopObject = element.getAsJsonObject();
+                        switch (shopObject.get("businessModel").getAsString()) {
+                            case "SPONSORED":
+                                SponsoredShop sponsoredShop = new SponsoredShop(shopObject.get("name").getAsString(), shopObject.get("description").getAsString(), shopObject.get("since").getAsInt(), shopObject.get("earnings").getAsFloat(), shopObject.get("sponsorBrand").getAsString(), new LinkedList(Arrays.asList(shopObject.get("catalogue").getAsJsonArray())));
+                                shops.add(sponsoredShop);
+                                break;
+                            case "LOYALTY":
+                                LoyaltyShop loyaltyShop = new LoyaltyShop(shopObject.get("name").getAsString(), shopObject.get("description").getAsString(), shopObject.get("since").getAsInt(), shopObject.get("earnings").getAsFloat(), shopObject.get("loyaltyThreshold").getAsInt(), new LinkedList(Arrays.asList(shopObject.get("catalogue").getAsJsonArray())));
+                                shops.add(loyaltyShop);
+                                break;
+                            case "MAX_PROFIT":
+                                MaxProfitShop maxProfitShop = new MaxProfitShop(shopObject.get("name").getAsString(), shopObject.get("description").getAsString(), shopObject.get("since").getAsInt(), shopObject.get("earnings").getAsFloat(), new LinkedList(Arrays.asList(shopObject.get("catalogue").getAsJsonArray())));
+                                shops.add(maxProfitShop);
+                                break;
+                            default:
+                                break;
+                        }
+                    }
                 }
             }
         } catch (IOException e) {
@@ -164,6 +170,9 @@ public class ShopDAOLocal implements ShopDAO {
         return shopObject;
     }
 
-    public void checkStatus() {
+    public void checkStatus() throws LocalFilesException{
+        if(readShop().isEmpty()) {
+            throw new LocalFilesException("Error: The shops.json file can’t be accessed.");
+        }
     }
 }
