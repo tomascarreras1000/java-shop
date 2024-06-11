@@ -38,13 +38,50 @@ public class ShopManager {
         }
     }
 
+    /**
+     * Finds a shop with provided name. Note that this search is case-sensitive.
+     * @param name
+     * @return
+     */
+    public Shop findShopByName(String name) {
+        Shop returnShop = null;
+        for (Shop shop : shops) {
+            if (shop.getName().equals(name)) {
+                returnShop = shop;
+                break;
+            }
+        }
+        return returnShop;
+    }
+
     public void removeShop(Shop shop) {
         shops.remove(shop);
     }
 
+    public void addProductToShop(String shopName, RetailProduct product) throws Exception {
+        for (Shop shop : shops) {
+            if (shop.getName().equalsIgnoreCase(shopName)) {
+                for (RetailProduct retailProduct : shop.getCatalogue())
+                    if (retailProduct.getName().equalsIgnoreCase(product.getName()))
+                        throw new Exception("\nERROR Product already exists.");
+                shop.addProduct(product);
+            }
+        }
+    }
+
+    public void removeRetailProductFromShop(Shop shop, RetailProduct productToRemove) throws Exception {
+        if (shop.getCatalogue().contains(productToRemove)) {
+            shop.getCatalogue().remove(productToRemove);
+        }
+        else
+            throw new Exception("\nERROR Product does not belong to shop.");
+    }
+
     public void removeBaseProduct(BaseProduct productToRemove) {
         for (Shop shop : shops) {
-            shop.removeProduct(productToRemove);
+            for (RetailProduct retailProduct : shop.getCatalogue())
+                if (retailProduct.getName().equalsIgnoreCase(productToRemove.getName()))
+                    shop.removeProduct(retailProduct);
         }
     }
 }

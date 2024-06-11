@@ -2,6 +2,7 @@ package presentation;
 
 import business.*;
 
+import java.util.LinkedList;
 import java.util.List;
 
 public class Controller {
@@ -73,10 +74,10 @@ public class Controller {
     public void executeProductsMenu(int option) throws Exception {
         switch (option) {
             case 1:
-                ProductsOptionOne();
+                productsOptionOne();
                 break;
             case 2:
-                ProductsOptionTwo();
+                productsOptionTwo();
                 break;
             case 3:
                 break;
@@ -86,7 +87,7 @@ public class Controller {
         }
     }
 
-    private void ProductsOptionOne() throws Exception {
+    private void productsOptionOne() throws Exception {
         String productName = ui.askForString("\nPlease enter the product's name: ");
         String productBrand = ui.askForString("Please enter the product's brand: ");
         float productMaxPrice = ui.askForFloat("Please enter the product's maximum retail price: ");
@@ -100,7 +101,7 @@ public class Controller {
         ui.showMessage("\nThe product \"" + productName + "\" by \"" + productBrand + "\" was added to the system.");
     }
 
-    private void ProductsOptionTwo() throws Exception {
+    private void productsOptionTwo() throws Exception {
         List<BaseProduct> productList = productManager.getBaseProducts();
         if (productList.isEmpty()) {
             ui.showMessage("There are currently no products available.");
@@ -154,15 +155,15 @@ public class Controller {
         switch (option) {
             case 1:
                 // New shop menu
-                ShopsOptionOne();
+                shopsOptionOne();
                 break;
             case 2:
                 // Expand a shop's catalogue
-                ShopsOptionTwo();
+                shopsOptionTwo();
                 break;
             case 3:
                 // Reduce a shop's catalogue
-                ShopsOptionThree();
+                shopsOptionThree();
                 break;
             case 4:
                 break;
@@ -176,7 +177,7 @@ public class Controller {
      * New shop menu
      * @throws Exception is an invalid business model is entered
      */
-    private void ShopsOptionOne() throws Exception {
+    private void shopsOptionOne() throws Exception {
         String shopName = ui.askForString("\nPlease enter the shop's name: ");
         String shopDescription = ui.askForString("Please enter the shop's description: ");
         int shopFoundationYear = ui.askForInteger("Please enter the shop's founding year: ");
@@ -208,20 +209,51 @@ public class Controller {
      * Catalogue expansion menu
      * @throws Exception
      */
-    private void ShopsOptionTwo() throws Exception {
+    private void shopsOptionTwo() throws Exception {
         String shopName = ui.askForString("\nPlease enter the shop's name: ");
         String productName = ui.askForString("Please enter the product's name: ");
         float currentPrice = ui.askForFloat("Please enter the product’s price at this shop: ");
 
-        Product product = productManager.findProductByName(productName);
+        BaseProduct product = productManager.findProductByName(productName);
         if (product == null) {
             throw new Exception("\nERROR: Product not found");
         }
-        String productBrand = product.getProductBrand();
+        String productBrand = product.getBrand();
 
-        shopManager.addProductToShop(shopName, product, currentPrice);
+        shopManager.addProductToShop(shopName, productManager.createRetailProductFromBaseProduct(product, currentPrice));
 
         ui.showMessage("\"" + productName + "\" by \""+ productBrand + "\" is now being sold at \"" + shopName + "\".");
+    }
+
+    private void shopsOptionThree() throws Exception {
+        String shopName = ui.askForString("Please enter the shop’s name: ");
+        Shop shop = shopManager.findShopByName(shopName);
+        LinkedList<RetailProduct> catalog = shop.getCatalogue();
+
+        if (catalog.isEmpty()) {
+            ui.showMessage("This shop currently has no products in its catalog.");
+            return;
+        }
+
+        ui.showMessage("This shop sells the following products: \n");
+        for (int i = 0; i < catalog.size(); i++) {
+            Product product = catalog.get(i);
+            ui.showMessage((i + 1) + ". " + product.getDescription());
+        }
+
+        int productPosition = ui.askForInteger("\nWhich one would you like to remove? ");
+
+        if (productPosition < 1 || productPosition > catalog.size()) {
+            ui.showMessage("\nERROR: Choose an existing option.");
+        } else {
+            RetailProduct selectedProduct = catalog.get(productPosition - 1);
+            String productName = selectedProduct.getName();
+            String productBrand = selectedProduct.getBrand();
+
+            shopManager.removeRetailProductFromShop(shop, selectedProduct);
+            ui.showMessage("\"" + productName + "\" by \"" + productBrand + "\" is no longer being sold at \"" + shopName + "\".");
+
+        }
     }
 
     private void addBaseProduct(BaseProduct baseProduct) {
