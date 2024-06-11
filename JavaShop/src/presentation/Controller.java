@@ -1,16 +1,22 @@
 package presentation;
 
 import business.*;
+import exceptions.BusinessException;
+import exceptions.InvalidRetailPriceException;
+import exceptions.PersistanceException;
+import exceptions.ProductNotFoundException;
 
+import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
 public class Controller {
-    private UI ui;
+    private final UI ui;
 
-    private ProductManager productManager;
-    private CartManager cartManager;
-    private ShopManager shopManager;
+    private final ProductManager productManager;
+    private final CartManager cartManager;
+    private final ShopManager shopManager;
 
     public Controller(UI ui, ProductManager productManager, CartManager cartManager, ShopManager shopManager) {
         this.ui = ui;
@@ -41,7 +47,7 @@ public class Controller {
                 runShopsMenu();
                 break;
             case 3:
-                //optionThree();
+                runSearchMenu();
                 break;
             case 4:
                 //optionFour();
@@ -58,6 +64,8 @@ public class Controller {
         }
     }
 
+
+
     public void runProductsMenu() throws Exception {
         int option;
         do {
@@ -65,13 +73,13 @@ public class Controller {
             option = ui.askForInteger("\nChoose an option: ");
             try {
                 executeProductsMenu(option);
-            } catch (Exception e) {
+            } catch (Exception | PersistanceException e) {
                 ui.showMessage(e.getMessage());
             }
         } while (option != 3);
     }
 
-    public void executeProductsMenu(int option) throws Exception {
+    public void executeProductsMenu(int option) throws Exception, PersistanceException {
         switch (option) {
             case 1:
                 productsOptionOne();
@@ -87,21 +95,23 @@ public class Controller {
         }
     }
 
-    private void productsOptionOne() throws Exception {
+    private void productsOptionOne() throws PersistanceException, Exception {
         String productName = ui.askForString("\nPlease enter the product's name: ");
         String productBrand = ui.askForString("Please enter the product's brand: ");
         float productMaxPrice = ui.askForFloat("Please enter the product's maximum retail price: ");
 
         ui.showMessage("\nThe system supports the following product categories: ");
-        ui.showMessage(" A) General\n" +
-                " B) Reduced Taxes\n" +
-                " C) Superreduced Taxes");
+        ui.showMessage("""
+                 A) General
+                 B) Reduced Taxes
+                 C) Superreduced Taxes\
+                """);
         String productCategory = ui.askForString("\nPlease pick the product’s category: ");
         productManager.createBaseProduct(productName, productBrand, productCategory, (float) productMaxPrice);
         ui.showMessage("\nThe product \"" + productName + "\" by \"" + productBrand + "\" was added to the system.");
     }
 
-    private void productsOptionTwo() throws Exception {
+    private void productsOptionTwo() throws PersistanceException, Exception {
         List<BaseProduct> productList = productManager.getBaseProducts();
         if (productList.isEmpty()) {
             ui.showMessage("There are currently no products available.");
@@ -145,13 +155,13 @@ public class Controller {
             option = ui.askForInteger("\nChoose an option: ");
             try {
                 executeShopsMenu(option);
-            } catch (Exception e) {
+            } catch (Exception | BusinessException | PersistanceException e) {
                 ui.showMessage(e.getMessage());
             }
         } while (option != 4);
     }
 
-    public void executeShopsMenu(int option) throws Exception{
+    public void executeShopsMenu(int option) throws BusinessException, PersistanceException, Exception {
         switch (option) {
             case 1:
                 // New shop menu
@@ -209,14 +219,14 @@ public class Controller {
      * Catalogue expansion menu
      * @throws Exception
      */
-    private void shopsOptionTwo() throws Exception {
+    private void shopsOptionTwo() throws PersistanceException, BusinessException, FileNotFoundException {
         String shopName = ui.askForString("\nPlease enter the shop's name: ");
         String productName = ui.askForString("Please enter the product's name: ");
         float currentPrice = ui.askForFloat("Please enter the product’s price at this shop: ");
 
         BaseProduct product = productManager.findProductByName(productName);
         if (product == null) {
-            throw new Exception("\nERROR: Product not found");
+            throw new ProductNotFoundException(product.getName());
         }
         String productBrand = product.getBrand();
 
@@ -255,12 +265,68 @@ public class Controller {
 
         }
     }
-
+    private void runSearchMenu() {
+//        String query = ui.askForString("Enter your query: ");
+//
+//        List<Product> products = productController.searchProducts(query);
+//
+//        if (products.isEmpty()) {
+//            ui.showMessage("No products found matching the query.");
+//            return;
+//        }
+//
+//        ui.showMessage("The following products were found:");
+//        int index = 1;
+//        for (Product product : products) {
+//            ui.showMessage(index + ") \"" + product.getProductName() + "\" by \"" + product.getProductBrand() + "\"");
+//
+//            ArrayList<Shop> sellingShops = shopController.findShopsSellingProduct(product);
+//            if (sellingShops.isEmpty()) {
+//                ui.showMessage("This product is not currently being sold in any shops.");
+//            } else {
+//                for (Shop sellingShop : sellingShops) {
+//                    ui.showMessage("Sold at:");
+//                    double price = sellingShop.getProductPrice(product);
+//                    ui.showMessage("- " + sellingShop.getShopName() + ": " + price);
+//                }
+//            }
+//            index++;
+//        }
+//        ui.showMessage(index + ") Back");
+//
+//        int choice = ui.askForInteger("Which product would you like to review? ");
+//        if (choice == index) {
+//            return;
+//        }
+//        if (choice < 1 || choice > products.size()) {
+//            ui.showMessage("Invalid choice. Please enter a valid option.");
+//            return;
+//        }
+//
+//        Product selectedProduct = products.get(choice - 1);
+//
+//        ui.showMessage("1) Read Reviews");
+//        ui.showMessage("2) Review Product");
+//        int reviewOption = ui.askForInteger("Choose an option: ");
+//
+//        switch (reviewOption) {
+//            case 1:
+//                List<Review> reviews = productController.getProductReviews(selectedProduct.getProductName(), selectedProduct.getProductBrand());
+//                displayReviews(reviews, selectedProduct);
+//                break;
+//            case 2:
+//                addReview(selectedProduct);
+//                break;
+//            default:
+//                ui.showMessage("Invalid option. Returning to main menu.");
+//                break;
+//        }
+    }
     private void addBaseProduct(BaseProduct baseProduct) {
 
     }
 
-    private void removeBaseProduct(BaseProduct productToRemove) {
+    private void removeBaseProduct(BaseProduct productToRemove) throws PersistanceException {
         productManager.removeBaseProduct(productToRemove);
         cartManager.removeProduct(productToRemove);
         shopManager.removeBaseProduct(productToRemove);

@@ -1,5 +1,7 @@
 package business;
 
+import exceptions.BusinessException;
+import exceptions.ProductAlreadyExistsException;
 import persistance.ShopDAO;
 
 import java.util.LinkedList;
@@ -9,6 +11,7 @@ public class ShopManager {
     private ShopDAO shopDAO;
     public ShopManager(ShopDAO shopDAO) {
         this.shopDAO = shopDAO;
+        shops = new LinkedList<>();
     }
 
     public void createShop(String name, String description, int since) {
@@ -58,12 +61,12 @@ public class ShopManager {
         shops.remove(shop);
     }
 
-    public void addProductToShop(String shopName, RetailProduct product) throws Exception {
+    public void addProductToShop(String shopName, RetailProduct product) throws BusinessException {
         for (Shop shop : shops) {
             if (shop.getName().equalsIgnoreCase(shopName)) {
                 for (RetailProduct retailProduct : shop.getCatalogue())
                     if (retailProduct.getName().equalsIgnoreCase(product.getName()))
-                        throw new Exception("\nERROR Product already exists.");
+                        throw new ProductAlreadyExistsException();
                 shop.addProduct(product);
             }
         }

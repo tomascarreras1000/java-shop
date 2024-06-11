@@ -15,7 +15,7 @@ public class RetailProduct extends Product {
         this.retailPrice = retailPrice;
     }
 
-    public RetailProduct(BaseProduct baseProduct, float retailPrice) throws Exception {
+    public RetailProduct(BaseProduct baseProduct, float retailPrice) {
         this.name = baseProduct.getName();
         this.brand = baseProduct.getBrand();
         this.category = baseProduct.getCategory();

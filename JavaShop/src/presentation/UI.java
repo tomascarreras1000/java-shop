@@ -34,8 +34,8 @@ public class UI {
     }
 
     public void showProductsMenu() {
-        showMessage("\n    1) Create a business.Product");
-        showMessage("    2) Remove a business.Product");
+        showMessage("\n    1) Create a Product");
+        showMessage("    2) Remove a Product");
         showMessage("\n    3) Back");
     }
 

@@ -1,29 +1,33 @@
 package business;
 
+import exceptions.BusinessException;
+import exceptions.InvalidRetailPriceException;
+import exceptions.LocalFilesException;
+import exceptions.PersistanceException;
 import persistance.ProductDAO;
 
+import java.io.FileNotFoundException;
 import java.util.LinkedList;
 
 public class ProductManager {
-    private LinkedList<BaseProduct> baseProducts;
     private ProductDAO productDAO;
 
     public ProductManager(ProductDAO productDAO) {
         this.productDAO = productDAO;
     }
 
-    public void createBaseProduct(String name, String brand, String category, float maxRetailPrice) throws Exception {
+    public void createBaseProduct(String name, String brand, String category, float maxRetailPrice) throws PersistanceException, Exception {
         category = AssignCategory(category);
         if (category == null)
             throw new Exception("Invalid category");
 
         BaseProduct newBaseProduct = new BaseProduct(name, brand, category, maxRetailPrice);
-        baseProducts.add(newBaseProduct);
+        productDAO.writeProduct(newBaseProduct);
     }
 
-    public RetailProduct createRetailProductFromBaseProduct(BaseProduct baseProduct, float retailPrice) throws Exception {
+    public RetailProduct createRetailProductFromBaseProduct(BaseProduct baseProduct, float retailPrice) throws PersistanceException, InvalidRetailPriceException {
         if (retailPrice > baseProduct.getMaxRetailPrice())
-            throw new Exception("Invalid retail price");
+            throw new InvalidRetailPriceException("Invalid retail price");
 
         return new RetailProduct(baseProduct, retailPrice);
     }
@@ -40,22 +44,24 @@ public class ProductManager {
         }
     }
 
-    public void removeBaseProduct(BaseProduct baseProduct) {
-        baseProducts.remove(baseProduct);
+    public void removeBaseProduct(BaseProduct baseProduct) throws PersistanceException {
+        productDAO.removeProduct(baseProduct);
     }
 
-    public LinkedList<BaseProduct> getBaseProducts() {
-        return baseProducts;
+    public LinkedList<BaseProduct> getBaseProducts() throws PersistanceException {
+        return productDAO.getProducts();
     }
 
     /**
      * Finds a product with provided name. Note that this search is case-sensitive.
+     *
      * @param name
      * @return
      */
-    public BaseProduct findProductByName(String name) {
+    public BaseProduct findProductByName(String name) throws PersistanceException, FileNotFoundException {
         BaseProduct returnProduct = null;
-        for (BaseProduct baseProduct : baseProducts) {
+
+        for (BaseProduct baseProduct : productDAO.getProducts()) {
             if (baseProduct.getName().equals(name)) {
                 returnProduct = baseProduct;
                 break;
