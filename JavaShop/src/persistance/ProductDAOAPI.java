@@ -1,5 +1,6 @@
 package persistance;
 
+import business.BaseProduct;
 import business.Product;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -28,7 +29,7 @@ public class ProductDAOAPI implements ProductDAO{
         this.gson = new Gson();
     }
 
-    public void createProduct(Product product) {
+    public void createProduct(BaseProduct product) {
 
         try {
 
@@ -65,7 +66,7 @@ public class ProductDAOAPI implements ProductDAO{
         }
     }
 
-    public LinkedList<Product> getProducts() {
+    public LinkedList<BaseProduct> getProducts() {
 
         try {
             URL url = new URL(String.format(API_URL_TEMPLATE_PRODUCTS, groupId));
@@ -83,7 +84,7 @@ public class ProductDAOAPI implements ProductDAO{
                 }
                 reader.close();
 
-                Type productListType = new TypeToken<List<Product>>(){}.getType();
+                Type productListType = new TypeToken<List<BaseProduct>>(){}.getType();
                 return gson.fromJson(response.toString(), productListType);
             } else {
                 System.out.println("Failed to fetch products, HTTP response code: " + responseCode);
@@ -95,32 +96,32 @@ public class ProductDAOAPI implements ProductDAO{
     }
 
     @Override
-    public void writeProduct(Product product) {
+    public void writeProduct(BaseProduct product) {
 
     }
 
     @Override
-    public void updateProducts(List<Product> productList) {
+    public void updateProducts(List<BaseProduct> productList) {
 
     }
 
     @Override
-    public void removeProduct(Product product) {
+    public void removeProduct(BaseProduct product) {
 
     }
 
     @Override
-    public Product getProductByNameAndBrand(String productName, String productBrand) {
+    public BaseProduct getProductByNameAndBrand(String productName, String productBrand) {
         return null;
     }
 
     @Override
-    public void updateProduct(Product updatedProduct) {
+    public void updateProduct(BaseProduct updatedProduct) {
 
     }
 
     //si voleu buscar nomes per nom poseu els altres parametres a null
-    public List<Product> searchProducts(String name, String brand, Double mrp, String category) {
+    public List<BaseProduct> searchProducts(String name, String brand, Double mrp, String category) {
         Gson gson = new Gson();
         try {
             String urlWithParameters = buildUrlWithParameters(groupId, name, brand, mrp, category);
@@ -139,7 +140,7 @@ public class ProductDAOAPI implements ProductDAO{
                 }
                 reader.close();
 
-                Type productListType = new TypeToken<List<Product>>(){}.getType();
+                Type productListType = new TypeToken<List<BaseProduct>>(){}.getType();
                 return gson.fromJson(response.toString(), productListType);
             } else {
                 System.out.println("Failed to search products, HTTP response code: " + responseCode);
@@ -160,7 +161,7 @@ public class ProductDAOAPI implements ProductDAO{
         return String.format(API_URL_TEMPLATE_PRODUCTS, groupId) + "?" + joiner.toString();
     }
 
-    public Product getProductByPosition(int position) {
+    public BaseProduct getProductByPosition(int position) {
         Gson gson = new Gson();
         try {
             URL url = new URL(String.format(API_URL_TEMPLATE_PRODUCTS_POSITION, groupId, position));
@@ -178,7 +179,7 @@ public class ProductDAOAPI implements ProductDAO{
                 }
                 reader.close();
 
-                return gson.fromJson(response.toString(), Product.class);
+                return gson.fromJson(response.toString(), BaseProduct.class);
             } else {
                 System.out.println("Failed to retrieve product, HTTP response code: " + responseCode);
             }
@@ -215,7 +216,7 @@ public class ProductDAOAPI implements ProductDAO{
         }
     }
 
-    public Product removeProductByPosition(int position) {
+    public BaseProduct removeProductByPosition(int position) {
         Gson gson = new Gson();
         try {
             URL url = new URL(String.format(API_URL_TEMPLATE_PRODUCTS_POSITION, groupId, position));

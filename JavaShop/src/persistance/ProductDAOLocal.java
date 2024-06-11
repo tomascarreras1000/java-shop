@@ -1,7 +1,7 @@
 package persistance;
 
+import business.BaseProduct;
 import business.Product;
-import business.SponsoredShop;
 import com.google.gson.Gson;
 import exceptions.LocalFilesException;
 import exceptions.OriginalProductNotFoundException;
@@ -21,12 +21,12 @@ public class ProductDAOLocal implements ProductDAO{
         this.gson = new Gson();
     }
 
-    public LinkedList<Product> getProducts() throws LocalFilesException {
-        Product[] products = null;
+    public LinkedList<BaseProduct> getProducts() throws LocalFilesException {
+        BaseProduct[] products = null;
         FileReader reader = null;
         try {
             reader = new FileReader("files/products.json");
-            products = gson.fromJson(reader, Product[].class);
+            products = gson.fromJson(reader, BaseProduct[].class);
         } catch (FileNotFoundException e) {
             throw new LocalFilesException("Error: The products.json file can’t be accessed.");
         } finally {
@@ -41,13 +41,13 @@ public class ProductDAOLocal implements ProductDAO{
         return new LinkedList<>(Arrays.asList(products));
     }
 
-    public void writeProduct(Product product) throws LocalFilesException {
-        LinkedList<Product> list = getProducts();
+    public void writeProduct(BaseProduct product) throws LocalFilesException {
+        LinkedList<BaseProduct> list = getProducts();
         list.add(product);
         updateProducts(list);
     }
 
-    public void updateProducts(List<Product> productList) throws LocalFilesException {
+    public void updateProducts(List<BaseProduct> productList) throws LocalFilesException {
         FileWriter writer = null;
         try {
             writer = new FileWriter("files/products.json");
@@ -61,14 +61,14 @@ public class ProductDAOLocal implements ProductDAO{
         }
     }
 
-    public void removeProduct(Product product) throws LocalFilesException {
-        LinkedList<Product> productList = getProducts();
+    public void removeProduct(BaseProduct product) throws LocalFilesException {
+        LinkedList<BaseProduct> productList = getProducts();
         productList.remove(product);
         updateProducts(productList);
     }
 
     public Product getProductByNameAndBrand(String productName, String productBrand) throws LocalFilesException {
-        LinkedList<Product> products = getProducts();
+        LinkedList<BaseProduct> products = getProducts();
         for (Product product : products) {
             if (product.getName().equalsIgnoreCase(productName) && product.getName().equalsIgnoreCase(productBrand)) {
                 return product;
@@ -77,8 +77,8 @@ public class ProductDAOLocal implements ProductDAO{
         return null;
     }
 
-    public void updateProduct(Product updatedProduct) throws LocalFilesException, OriginalProductNotFoundException {
-        LinkedList<Product> products = getProducts();
+    public void updateProduct(BaseProduct updatedProduct) throws LocalFilesException, OriginalProductNotFoundException {
+        LinkedList<BaseProduct> products = getProducts();
         for (Product p : products) {
             if (compareProducts(p, updatedProduct)) {
                 products.set(products.indexOf(p), updatedProduct);
