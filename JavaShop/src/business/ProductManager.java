@@ -76,9 +76,15 @@ public class ProductManager {
         return returnProduct;
     }
 
-    public void writeReview(BaseProduct product, String text, int stars) throws PersistanceException {
+    public float writeReview(BaseProduct product, String text, int stars) throws PersistanceException {
         ProductReview review = new ProductReview(text, stars);
         product.addReview(review);
         productDAO.updateProducts(product);
+
+        float ret = 0;
+        for (ProductReview pr : product.getReviews()) {
+            ret += pr.getStars();
+        }
+        return ret /product.getReviews().size();
     }
 }

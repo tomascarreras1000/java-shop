@@ -367,7 +367,7 @@ public class Controller {
                     return;
                 }
                 String text = ui.askForString("Please enter the review: ");
-                productManager.writeReview(selectedProduct, text, stars);
+                assignNewStarAverage(productManager.writeReview(selectedProduct, text, stars));
                 ui.showMessage("The " + stars + "* review has been added to the product.");
                 break;
             case 3:
@@ -451,7 +451,7 @@ public class Controller {
                     return;
                 }
                 String text = ui.askForString("Please enter the review: ");
-                productManager.writeReview(baseProduct, text, stars);
+                assignNewStarAverage(productManager.writeReview(baseProduct, text, stars));
                 ui.showMessage("The " + stars + "* review has been added to the product.");
                 break;
             case 3:
@@ -511,6 +511,13 @@ public class Controller {
                 ui.showMessage("Invalid option. Returning to main menu.");
                 break;
         }
+    }
 
+    private void assignNewStarAverage(float newAverage) throws PersistanceException {
+        for (Shop shop : shopManager.getShops()) {
+            for (RetailProduct product : shop.getCatalogue()) {
+                product.setAverageStars(newAverage);
+            }
+        }
     }
 }
