@@ -9,7 +9,6 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 import exceptions.APINotWorkingException;
-import exceptions.LocalFilesException;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -52,7 +51,7 @@ public class ShopDAOAPI implements ShopDAO {
 
     /*****************************DONE*********************************/
 
-    public void createShop(Shop shop) {
+    public void createShop(Shop shop) throws APINotWorkingException {
 
         try {
 
@@ -92,11 +91,11 @@ public class ShopDAOAPI implements ShopDAO {
             }
 
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new APINotWorkingException(e.getMessage());
         }
     }
 
-    public LinkedList<Shop> getShops() {
+    public LinkedList<Shop> getShops() throws APINotWorkingException {
 
         try {
             URL url = new URL(String.format(API_URL_TEMPLATE_SHOPS, groupId));
@@ -121,7 +120,7 @@ public class ShopDAOAPI implements ShopDAO {
                 System.out.println("Failed to fetch shops, HTTP response code: " + responseCode);
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new APINotWorkingException(e.getMessage());
         }
         return null;
     }
@@ -137,10 +136,11 @@ public class ShopDAOAPI implements ShopDAO {
             if (responseCode != HttpURLConnection.HTTP_OK) // API is up and running!
                 throw new APINotWorkingException("Error: The API isn’t available.\n");
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new APINotWorkingException(e.getMessage());
         }
     }
-    public void removeShop(int position) {
+
+    public void removeShop(int position) throws APINotWorkingException {
         Gson gson = new Gson();
         try {
             URL url = new URL(String.format(API_URL_TEMPLATE_POSITION, groupId, position));
@@ -161,11 +161,11 @@ public class ShopDAOAPI implements ShopDAO {
                 System.out.println(connection.getResponseMessage());
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new APINotWorkingException(e.getMessage());
         }
     }
 
-    private List<Shop> searchShops(String name, String description, Integer foundation, String businessModel, Float totalEarnings) {
+    private List<Shop> searchShops(String name, String description, Integer foundation, String businessModel, Float totalEarnings) throws APINotWorkingException {
 
         try {
             String urlWithParameters = buildUrlWithParameters(groupId, name, description, foundation, businessModel, totalEarnings);
@@ -191,7 +191,7 @@ public class ShopDAOAPI implements ShopDAO {
                 System.out.println("Failed to search shops, HTTP response code: " + responseCode);
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new APINotWorkingException(e.getMessage());
         }
         return null;
     }
@@ -207,7 +207,7 @@ public class ShopDAOAPI implements ShopDAO {
         return String.format(API_URL_TEMPLATE_SHOPS, groupId) + "?" + joiner.toString();
     }
 
-    private Shop getShopByPosition(int position) {
+    private Shop getShopByPosition(int position) throws APINotWorkingException {
 
         try {
             URL url = new URL(String.format(API_URL_TEMPLATE_POSITION, groupId, position));
@@ -230,7 +230,7 @@ public class ShopDAOAPI implements ShopDAO {
                 System.out.println("Failed to retrieve shop, HTTP response code: " + responseCode);
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new APINotWorkingException(e.getMessage());
         }
         return null;
     }

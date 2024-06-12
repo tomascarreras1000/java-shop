@@ -243,7 +243,7 @@ public class ProductDAOAPI implements ProductDAO{
             if (responseCode != HttpURLConnection.HTTP_OK) // API is up and running!
                 throw new APINotWorkingException("Error: The API isn’t available.\n");
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new APINotWorkingException(e.getMessage());
         }
     }
 }
