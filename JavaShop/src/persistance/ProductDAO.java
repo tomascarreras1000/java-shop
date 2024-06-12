@@ -8,11 +8,10 @@ import exceptions.PersistanceException;
 import java.util.LinkedList;
 
 public interface ProductDAO {
-     LinkedList<BaseProduct> getProducts() throws LocalFilesException;
-    void createProduct(BaseProduct product) throws LocalFilesException;
-    void updateProducts(LinkedList<BaseProduct> productList) throws LocalFilesException;
-    void removeProduct(BaseProduct product) throws LocalFilesException;
-    BaseProduct getProductByNameAndBrand(String productName, String productBrand) throws LocalFilesException;
-    void updateProducts(BaseProduct updatedProduct) throws LocalFilesException, OriginalProductNotFoundException;
+    LinkedList<BaseProduct> getProducts() throws PersistanceException;
+    void createProduct(BaseProduct product) throws PersistanceException;
+    void updateProducts(LinkedList<BaseProduct> productList) throws PersistanceException;
+    void removeProduct(BaseProduct product) throws PersistanceException;
+    void updateProducts(BaseProduct updatedProduct) throws PersistanceException;
     void checkStatus() throws PersistanceException;
 }

@@ -1,8 +1,12 @@
 package persistance;
 
 
+import business.LoyaltyShop;
+import business.MaxProfitShop;
 import business.Shop;
+import business.SponsoredShop;
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 import exceptions.APINotWorkingException;
 import exceptions.LocalFilesException;
@@ -18,7 +22,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.StringJoiner;
 
-public class ShopDAOAPI implements ShopDAO{
+public class ShopDAOAPI implements ShopDAO {
 
     private Gson gson;
 
@@ -31,6 +35,23 @@ public class ShopDAOAPI implements ShopDAO{
         this.gson = new Gson();
     }
 
+    //TODO: Check if they work with the different types of shops
+    //TODO: Implement the following methods
+
+    @Override
+    public void removeShop(Shop shopToRemove) throws APINotWorkingException {
+    }
+
+    @Override
+    public void updateShops(Shop shopToUpdate) throws APINotWorkingException {
+    }
+
+    @Override
+    public void updateShops(LinkedList<Shop> shopList) {
+    }
+
+    /*****************************DONE*********************************/
+
     public void createShop(Shop shop) {
 
         try {
@@ -41,7 +62,14 @@ public class ShopDAOAPI implements ShopDAO{
             connection.setRequestProperty("Content-Type", "application/json");
             connection.setDoOutput(true);
 
-            String jsonPayload = gson.toJson(shop);
+            String jsonPayload = "";
+            if (shop instanceof LoyaltyShop) {
+                jsonPayload = LoyaltyShopToJsonObject((LoyaltyShop) shop).toString();
+            } else if (shop instanceof MaxProfitShop) {
+                jsonPayload = MaxProfitShopToJsonObject((MaxProfitShop) shop).toString();
+            } else if (shop instanceof SponsoredShop) {
+                jsonPayload = SponsoredShopToJsonObject((SponsoredShop) shop).toString();
+            }
 
             OutputStream outputStream = connection.getOutputStream();
             outputStream.write(jsonPayload.getBytes());
@@ -86,7 +114,8 @@ public class ShopDAOAPI implements ShopDAO{
                 }
                 reader.close();
 
-                Type shopListType = new TypeToken<List<Shop>>(){}.getType();
+                Type shopListType = new TypeToken<List<Shop>>() {
+                }.getType();
                 return gson.fromJson(response.toString(), shopListType);
             } else {
                 System.out.println("Failed to fetch shops, HTTP response code: " + responseCode);
@@ -97,7 +126,46 @@ public class ShopDAOAPI implements ShopDAO{
         return null;
     }
 
-    public List<Shop> searchShops(String name, String description, Integer foundation, String businessModel, Float totalEarnings) {
+    public void checkStatus() throws APINotWorkingException {
+        try {
+            URL url = new URL(String.format(API_URL_TEMPLATE_SHOPS, groupId));
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("GET");
+            connection.setRequestProperty("Content-Type", "application/json");
+
+            int responseCode = connection.getResponseCode();
+            if (responseCode != HttpURLConnection.HTTP_OK) // API is up and running!
+                throw new APINotWorkingException("Error: The API isn’t available.\n");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    public void removeShop(int position) {
+        Gson gson = new Gson();
+        try {
+            URL url = new URL(String.format(API_URL_TEMPLATE_POSITION, groupId, position));
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("DELETE");
+            connection.setRequestProperty("Content-Type", "application/json");
+
+            int responseCode = connection.getResponseCode();
+            if (responseCode == HttpURLConnection.HTTP_OK) {
+                BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+                StringBuilder response = new StringBuilder();
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    response.append(line);
+                }
+                reader.close();
+            } else {
+                System.out.println(connection.getResponseMessage());
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private List<Shop> searchShops(String name, String description, Integer foundation, String businessModel, Float totalEarnings) {
 
         try {
             String urlWithParameters = buildUrlWithParameters(groupId, name, description, foundation, businessModel, totalEarnings);
@@ -116,7 +184,8 @@ public class ShopDAOAPI implements ShopDAO{
                 }
                 reader.close();
 
-                Type shopListType = new TypeToken<List<Shop>>(){}.getType();
+                Type shopListType = new TypeToken<List<Shop>>() {
+                }.getType();
                 return gson.fromJson(response.toString(), shopListType);
             } else {
                 System.out.println("Failed to search shops, HTTP response code: " + responseCode);
@@ -138,7 +207,7 @@ public class ShopDAOAPI implements ShopDAO{
         return String.format(API_URL_TEMPLATE_SHOPS, groupId) + "?" + joiner.toString();
     }
 
-    public Shop getShopByPosition(int position) {
+    private Shop getShopByPosition(int position) {
 
         try {
             URL url = new URL(String.format(API_URL_TEMPLATE_POSITION, groupId, position));
@@ -166,110 +235,38 @@ public class ShopDAOAPI implements ShopDAO{
         return null;
     }
 
-    public void removeShops(String name, String description, Integer foundation, String businessModel, Float totalEarnings) {
-
-        try {
-            String urlWithParameters = buildUrlWithParameters(groupId, name, description, foundation, businessModel, totalEarnings);
-            URL url = new URL(urlWithParameters);
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            connection.setRequestMethod("DELETE");
-            connection.setRequestProperty("Content-Type", "application/json");
-
-            int responseCode = connection.getResponseCode();
-            if (responseCode == HttpURLConnection.HTTP_OK) {
-                BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-                StringBuilder response = new StringBuilder();
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    response.append(line);
-                }
-                reader.close();
-            } else {
-                System.out.println(connection.getResponseMessage());
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-            e.getMessage();
-        }
+    private JsonObject LoyaltyShopToJsonObject(LoyaltyShop loyaltyShop) {
+        JsonObject shopObject = new JsonObject();
+        shopObject.addProperty("name", loyaltyShop.getName());
+        shopObject.addProperty("description", loyaltyShop.getDescription());
+        shopObject.addProperty("since", loyaltyShop.getSince());
+        shopObject.addProperty("earnings", loyaltyShop.getEarnings());
+        shopObject.addProperty("businessModel", "LOYALTY");
+        shopObject.addProperty("loyaltyThreshold", loyaltyShop.getLoyaltyThreshold());
+        shopObject.add("catalogue", gson.toJsonTree(loyaltyShop.getCatalogue()));
+        return shopObject;
     }
 
-    public void removeShop(int position) {
-        Gson gson = new Gson();
-        try {
-            URL url = new URL(String.format(API_URL_TEMPLATE_POSITION, groupId, position));
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            connection.setRequestMethod("DELETE");
-            connection.setRequestProperty("Content-Type", "application/json");
-
-            int responseCode = connection.getResponseCode();
-            if (responseCode == HttpURLConnection.HTTP_OK) {
-                BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-                StringBuilder response = new StringBuilder();
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    response.append(line);
-                }
-                reader.close();
-            } else {
-                System.out.println(connection.getResponseMessage());
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-    @Override
-    public void removeShop(Shop shopToRemove) throws APINotWorkingException {
-
-    }
-    @Override
-    public void removeShop(String shopName) throws LocalFilesException {
-
-    }
-    @Override
-    public void updateShops(Shop shopToUpdate) throws LocalFilesException {
-
+    private JsonObject SponsoredShopToJsonObject(SponsoredShop sponsoredShop) {
+        JsonObject shopObject = new JsonObject();
+        shopObject.addProperty("name", sponsoredShop.getName());
+        shopObject.addProperty("description", sponsoredShop.getDescription());
+        shopObject.addProperty("since", sponsoredShop.getSince());
+        shopObject.addProperty("earnings", sponsoredShop.getEarnings());
+        shopObject.addProperty("sponsorBrand", sponsoredShop.getSponsorBrand());
+        shopObject.addProperty("businessModel", "SPONSORED");
+        shopObject.add("catalogue", gson.toJsonTree(sponsoredShop.getCatalogue()));
+        return shopObject;
     }
 
-    @Override
-    public void updateShops(LinkedList<Shop> shopList) {
-
+    private JsonObject MaxProfitShopToJsonObject(MaxProfitShop maxProfitShop) {
+        JsonObject shopObject = new JsonObject();
+        shopObject.addProperty("name", maxProfitShop.getName());
+        shopObject.addProperty("description", maxProfitShop.getDescription());
+        shopObject.addProperty("since", maxProfitShop.getSince());
+        shopObject.addProperty("earnings", maxProfitShop.getEarnings());
+        shopObject.addProperty("businessModel", "MAX_PROFIT");
+        shopObject.add("catalogue", gson.toJsonTree(maxProfitShop.getCatalogue()));
+        return shopObject;
     }
-    private void removeAllShops(){
-        try {
-            URL url = new URL(String.format(API_URL_TEMPLATE_SHOPS, groupId));
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            connection.setRequestMethod("DELETE");
-            connection.setRequestProperty("Content-Type", "application/json");
-
-            int responseCode = connection.getResponseCode();
-            if (responseCode == HttpURLConnection.HTTP_OK) {
-                BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-                StringBuilder response = new StringBuilder();
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    response.append(line);
-                }
-                reader.close();
-            } else {
-                System.out.println(connection.getResponseMessage());
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-    public void checkStatus() throws APINotWorkingException {
-        try {
-            URL url = new URL(String.format(API_URL_TEMPLATE_SHOPS, groupId));
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            connection.setRequestMethod("GET");
-            connection.setRequestProperty("Content-Type", "application/json");
-
-            int responseCode = connection.getResponseCode();
-            if (responseCode != HttpURLConnection.HTTP_OK) // API is up and running!
-                throw new APINotWorkingException("Error: The API isn’t available.\n");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
 }

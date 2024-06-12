@@ -29,7 +29,22 @@ public class ProductDAOAPI implements ProductDAO{
     public ProductDAOAPI() {
         this.gson = new Gson();
     }
-    public void createProduct(BaseProduct product) throws LocalFilesException{
+
+    //TODO: Implement methods:
+    @Override
+    public void updateProducts(LinkedList<BaseProduct> productList) {
+
+    }
+    @Override
+    public void removeProduct(BaseProduct product) {
+
+    }
+    @Override
+    public void updateProducts(BaseProduct updatedProduct) {
+
+    }
+    /***********************************DONE*********************************************/
+    public void createProduct(BaseProduct product) throws APINotWorkingException{
 
         try {
 
@@ -95,28 +110,8 @@ public class ProductDAOAPI implements ProductDAO{
         return null;
     }
 
-    @Override
-    public void updateProducts(LinkedList<BaseProduct> productList) {
-
-    }
-
-    @Override
-    public void removeProduct(BaseProduct product) {
-
-    }
-
-    @Override
-    public BaseProduct getProductByNameAndBrand(String productName, String productBrand) {
-        return null;
-    }
-
-    @Override
-    public void updateProducts(BaseProduct updatedProduct) {
-
-    }
-
     //si voleu buscar nomes per nom poseu els altres parametres a null
-    public LinkedList<BaseProduct> searchProducts(String name, String brand, Double mrp, String category) {
+    private LinkedList<BaseProduct> searchProducts(String name, String brand, Double mrp, String category) {
         Gson gson = new Gson();
         try {
             String urlWithParameters = buildUrlWithParameters(groupId, name, brand, mrp, category);
@@ -156,7 +151,7 @@ public class ProductDAOAPI implements ProductDAO{
         return String.format(API_URL_TEMPLATE_PRODUCTS, groupId) + "?" + joiner.toString();
     }
 
-    public BaseProduct getProductByPosition(int position) {
+    private BaseProduct getProductByPosition(int position) {
         Gson gson = new Gson();
         try {
             URL url = new URL(String.format(API_URL_TEMPLATE_PRODUCTS_POSITION, groupId, position));
@@ -184,7 +179,7 @@ public class ProductDAOAPI implements ProductDAO{
         return null;
     }
 
-    public void removeProducts(String name, String brand, Double mrp, String category) {
+    private void removeProducts(String name, String brand, Double mrp, String category) {
 
         try {
             String urlWithParameters = buildUrlWithParameters(groupId, name, brand, mrp, category);
@@ -211,7 +206,7 @@ public class ProductDAOAPI implements ProductDAO{
         }
     }
 
-    public BaseProduct removeProductByPosition(int position) {
+    private BaseProduct removeProductByPosition(int position) {
         Gson gson = new Gson();
         try {
             URL url = new URL(String.format(API_URL_TEMPLATE_PRODUCTS_POSITION, groupId, position));
@@ -249,31 +244,6 @@ public class ProductDAOAPI implements ProductDAO{
                 throw new APINotWorkingException("Error: The API isn’t available.\n");
         } catch (IOException e) {
             e.printStackTrace();
-        }
-    }
-
-    public void removeAllProducts(){
-        try {
-            URL url = new URL(String.format(API_URL_TEMPLATE_PRODUCTS, groupId));
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            connection.setRequestMethod("DELETE");
-            connection.setRequestProperty("Content-Type", "application/json");
-
-            int responseCode = connection.getResponseCode();
-            if (responseCode == HttpURLConnection.HTTP_OK) {
-                BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-                StringBuilder response = new StringBuilder();
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    response.append(line);
-                }
-                reader.close();
-            } else {
-                System.out.println(connection.getResponseMessage());
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-            e.getMessage();
         }
     }
 }

@@ -12,7 +12,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.LinkedList;
-import java.util.List;
 
 public class ProductDAOLocal implements ProductDAO {
     private Gson gson;
@@ -68,16 +67,6 @@ public class ProductDAOLocal implements ProductDAO {
             }
         }
         updateProducts(productList);
-    }
-
-    public BaseProduct getProductByNameAndBrand(String productName, String productBrand) throws LocalFilesException {
-        LinkedList<BaseProduct> products = getProducts();
-        for (BaseProduct product : products) {
-            if (product.getName().equalsIgnoreCase(productName) && product.getName().equalsIgnoreCase(productBrand)) {
-                return product;
-            }
-        }
-        return null;
     }
 
     public void updateProducts(BaseProduct updatedProduct) throws LocalFilesException, OriginalProductNotFoundException {

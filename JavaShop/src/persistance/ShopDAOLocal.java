@@ -62,39 +62,12 @@ public class ShopDAOLocal implements ShopDAO {
     /**
      * Removes a shop from the list of shops and updates the file
      *
-     * @param shopPosition
-     */
-    public void removeShop(int shopPosition) throws LocalFilesException {
-        LinkedList<Shop> shops = getShops();
-        shops.remove(shopPosition);
-        updateShops(shops);
-    }
-
-    /**
-     * Removes a shop from the list of shops and updates the file
-     *
      * @param shopToRemove
      */
     public void removeShop(Shop shopToRemove) throws LocalFilesException {
         LinkedList<Shop> shops = getShops();
         for (Shop shop : shops) {
             if (shop.getName().equals(shopToRemove.getName())) {
-                shops.remove(shop);
-                break;
-            }
-        }
-        updateShops(shops);
-    }
-
-    /**
-     * Removes a shop from the list of shops and updates the file
-     *
-     * @param shopName
-     */
-    public void removeShop(String shopName) throws LocalFilesException {
-        LinkedList<Shop> shops = getShops();
-        for (Shop shop : shops) {
-            if (shop.getName().equals(shopName)) {
                 shops.remove(shop);
                 break;
             }
@@ -146,13 +119,17 @@ public class ShopDAOLocal implements ShopDAO {
         }
     }
 
+    public void checkStatus() throws LocalFilesException {
+        getShops();
+    }
+
     public void createShop(Shop shop) throws LocalFilesException {
         LinkedList<Shop> shops = getShops();
         shops.add(shop);
         updateShops(shops);
     }
 
-    public JsonObject LoyaltyShopToJsonObject(LoyaltyShop loyaltyShop) {
+    private JsonObject LoyaltyShopToJsonObject(LoyaltyShop loyaltyShop) {
         JsonObject shopObject = new JsonObject();
         shopObject.addProperty("name", loyaltyShop.getName());
         shopObject.addProperty("description", loyaltyShop.getDescription());
@@ -164,7 +141,7 @@ public class ShopDAOLocal implements ShopDAO {
         return shopObject;
     }
 
-    public JsonObject SponsoredShopToJsonObject(SponsoredShop sponsoredShop) {
+    private JsonObject SponsoredShopToJsonObject(SponsoredShop sponsoredShop) {
         JsonObject shopObject = new JsonObject();
         shopObject.addProperty("name", sponsoredShop.getName());
         shopObject.addProperty("description", sponsoredShop.getDescription());
@@ -176,7 +153,7 @@ public class ShopDAOLocal implements ShopDAO {
         return shopObject;
     }
 
-    public JsonObject MaxProfitShopToJsonObject(MaxProfitShop maxProfitShop) {
+    private JsonObject MaxProfitShopToJsonObject(MaxProfitShop maxProfitShop) {
         JsonObject shopObject = new JsonObject();
         shopObject.addProperty("name", maxProfitShop.getName());
         shopObject.addProperty("description", maxProfitShop.getDescription());
@@ -187,7 +164,4 @@ public class ShopDAOLocal implements ShopDAO {
         return shopObject;
     }
 
-    public void checkStatus() throws LocalFilesException {
-        getShops();
-    }
 }
