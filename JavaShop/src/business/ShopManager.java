@@ -1,12 +1,9 @@
 package business;
 
 import exceptions.BusinessException;
-import exceptions.LocalFilesException;
 import exceptions.PersistanceException;
 import exceptions.ProductAlreadyExistsException;
 import persistance.ShopDAO;
-
-import java.util.LinkedList;
 
 public class ShopManager {
     private ShopDAO shopDAO;
@@ -48,7 +45,7 @@ public class ShopManager {
      */
     public Shop findShopByName(String name) throws PersistanceException {
         Shop returnShop = null;
-        for (Shop shop : shopDAO.readShop()) { // TODO: CHANGE FUNCTION NAME
+        for (Shop shop : shopDAO.getShops()) { // TODO: CHANGE FUNCTION NAME
             if (shop.getName().equals(name)) {
                 returnShop = shop;
                 break;
@@ -62,7 +59,7 @@ public class ShopManager {
     }
 
     public void addProductToShop(String shopName, RetailProduct product) throws BusinessException, PersistanceException {
-        for (Shop shop : shopDAO.readShop()) {
+        for (Shop shop : shopDAO.getShops()) {
             if (shop.getName().equalsIgnoreCase(shopName)) {
                 for (RetailProduct retailProduct : shop.getCatalogue())
                     if (retailProduct.getName().equalsIgnoreCase(product.getName()))
@@ -82,7 +79,7 @@ public class ShopManager {
     }
 
     public void removeBaseProduct(BaseProduct productToRemove) throws PersistanceException {
-        for (Shop shop : shopDAO.readShop()) {
+        for (Shop shop : shopDAO.getShops()) {
             for (RetailProduct retailProduct : shop.getCatalogue())
                 if (retailProduct.getName().equalsIgnoreCase(productToRemove.getName()))
                     shop.removeProduct(retailProduct);

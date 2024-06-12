@@ -47,7 +47,7 @@ public class ProductDAOLocal implements ProductDAO {
         updateProducts(list);
     }
 
-    public void updateProducts(List<BaseProduct> productList) throws LocalFilesException {
+    public void updateProducts(LinkedList<BaseProduct> productList) throws LocalFilesException {
         FileWriter writer = null;
         try {
             writer = new FileWriter("files/products.json");

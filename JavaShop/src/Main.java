@@ -1,6 +1,4 @@
-import business.CartManager;
-import business.ProductManager;
-import business.ShopManager;
+import business.*;
 import exceptions.PersistanceException;
 import persistance.*;
 import presentation.Controller;
@@ -20,22 +18,20 @@ public class Main {
         // Check if API is working
         System.out.println("Checking API status...");
         try {
-            throw new PersistanceException("jaja");
-            /*productDAO.checkStatus();
+            productDAO.checkStatus();
             shopDAO.checkStatus();
 
             CartManager cartManager = new CartManager();
             ProductManager productManager = new ProductManager(productDAO);
             ShopManager shopManager = new ShopManager(shopDAO);
             Controller controller = new Controller(ui, productManager, cartManager, shopManager);
-            controller.mainMenu();*/
-
+            controller.mainMenu();
         } catch (PersistanceException eAPI) {
             System.out.println(eAPI.getMessage());
 
             // Check if local data can be accessed
             System.out.println("Verifying local files...");
-            productDAO = new ProductDAOLocal();
+            //productDAO = new ProductDAOLocal();
             shopDAO = new ShopDAOLocal();
             try {
                 productDAO.checkStatus();

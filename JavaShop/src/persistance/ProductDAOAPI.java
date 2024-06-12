@@ -84,7 +84,7 @@ public class ProductDAOAPI implements ProductDAO{
                 }
                 reader.close();
 
-                Type productListType = new TypeToken<List<BaseProduct>>(){}.getType();
+                Type productListType = new TypeToken<LinkedList<BaseProduct>>(){}.getType();
                 return gson.fromJson(response.toString(), productListType);
             } else {
                 System.out.println("Failed to fetch products, HTTP response code: " + responseCode);
@@ -96,7 +96,7 @@ public class ProductDAOAPI implements ProductDAO{
     }
 
     @Override
-    public void updateProducts(List<BaseProduct> productList) {
+    public void updateProducts(LinkedList<BaseProduct> productList) {
 
     }
 
@@ -116,7 +116,7 @@ public class ProductDAOAPI implements ProductDAO{
     }
 
     //si voleu buscar nomes per nom poseu els altres parametres a null
-    public List<BaseProduct> searchProducts(String name, String brand, Double mrp, String category) {
+    public LinkedList<BaseProduct> searchProducts(String name, String brand, Double mrp, String category) {
         Gson gson = new Gson();
         try {
             String urlWithParameters = buildUrlWithParameters(groupId, name, brand, mrp, category);
@@ -135,7 +135,7 @@ public class ProductDAOAPI implements ProductDAO{
                 }
                 reader.close();
 
-                Type productListType = new TypeToken<List<BaseProduct>>(){}.getType();
+                Type productListType = new TypeToken<LinkedList<BaseProduct>>(){}.getType();
                 return gson.fromJson(response.toString(), productListType);
             } else {
                 System.out.println("Failed to search products, HTTP response code: " + responseCode);
@@ -245,10 +245,35 @@ public class ProductDAOAPI implements ProductDAO{
             connection.setRequestProperty("Content-Type", "application/json");
 
             int responseCode = connection.getResponseCode();
-            if (responseCode == HttpURLConnection.HTTP_OK) // API is up and running!
+            if (responseCode != HttpURLConnection.HTTP_OK) // API is up and running!
                 throw new APINotWorkingException("Error: The API isn’t available.\n");
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    public void removeAllProducts(){
+        try {
+            URL url = new URL(String.format(API_URL_TEMPLATE_PRODUCTS, groupId));
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("DELETE");
+            connection.setRequestProperty("Content-Type", "application/json");
+
+            int responseCode = connection.getResponseCode();
+            if (responseCode == HttpURLConnection.HTTP_OK) {
+                BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+                StringBuilder response = new StringBuilder();
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    response.append(line);
+                }
+                reader.close();
+            } else {
+                System.out.println(connection.getResponseMessage());
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            e.getMessage();
         }
     }
 }

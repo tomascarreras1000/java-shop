@@ -68,7 +68,7 @@ public class ShopDAOAPI implements ShopDAO{
         }
     }
 
-    public List<Shop> getShops() {
+    public LinkedList<Shop> getShops() {
 
         try {
             URL url = new URL(String.format(API_URL_TEMPLATE_SHOPS, groupId));
@@ -97,7 +97,7 @@ public class ShopDAOAPI implements ShopDAO{
         return null;
     }
 
-    public List<Shop> searchShops(String name, String description, Integer foundation, String businessModel, Double totalEarnings) {
+    public List<Shop> searchShops(String name, String description, Integer foundation, String businessModel, Float totalEarnings) {
 
         try {
             String urlWithParameters = buildUrlWithParameters(groupId, name, description, foundation, businessModel, totalEarnings);
@@ -127,7 +127,7 @@ public class ShopDAOAPI implements ShopDAO{
         return null;
     }
 
-    private String buildUrlWithParameters(String groupId, String name, String description, Integer foundation, String businessModel, Double totalEarnings) {
+    private String buildUrlWithParameters(String groupId, String name, String description, Integer foundation, String businessModel, Float totalEarnings) {
         StringJoiner joiner = new StringJoiner("&");
         if (name != null) joiner.add("shopName=" + name);
         if (description != null) joiner.add("shopDescription=" + description);
@@ -166,7 +166,7 @@ public class ShopDAOAPI implements ShopDAO{
         return null;
     }
 
-    public void removeShops(String name, String description, Integer foundation, String businessModel, Double totalEarnings) {
+    public void removeShops(String name, String description, Integer foundation, String businessModel, Float totalEarnings) {
 
         try {
             String urlWithParameters = buildUrlWithParameters(groupId, name, description, foundation, businessModel, totalEarnings);
@@ -193,7 +193,7 @@ public class ShopDAOAPI implements ShopDAO{
         }
     }
 
-    public Shop removeShopByPosition(int position) {
+    public void removeShop(int position) {
         Gson gson = new Gson();
         try {
             URL url = new URL(String.format(API_URL_TEMPLATE_POSITION, groupId, position));
@@ -216,41 +216,60 @@ public class ShopDAOAPI implements ShopDAO{
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return null;
     }
-
-    public void checkStatus() throws APINotWorkingException {
-        //TODO: Implement this method
-        throw new APINotWorkingException("API is not working");
-    }
-
     @Override
-    public LinkedList<Shop> readShop() throws LocalFilesException {
-        return null;
-    }
-
-    @Override
-    public void removeShop(int shopPosition) throws LocalFilesException {
+    public void removeShop(Shop shopToRemove) throws APINotWorkingException {
 
     }
-
-    @Override
-    public void removeShop(Shop shopToRemove) throws LocalFilesException {
-
-    }
-
     @Override
     public void removeShop(String shopName) throws LocalFilesException {
 
     }
-
     @Override
     public void updateShops(Shop shopToUpdate) throws LocalFilesException {
 
     }
 
     @Override
-    public void updateShops(List<Shop> shopList) {
+    public void updateShops(LinkedList<Shop> shopList) {
 
     }
+    private void removeAllShops(){
+        try {
+            URL url = new URL(String.format(API_URL_TEMPLATE_SHOPS, groupId));
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("DELETE");
+            connection.setRequestProperty("Content-Type", "application/json");
+
+            int responseCode = connection.getResponseCode();
+            if (responseCode == HttpURLConnection.HTTP_OK) {
+                BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+                StringBuilder response = new StringBuilder();
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    response.append(line);
+                }
+                reader.close();
+            } else {
+                System.out.println(connection.getResponseMessage());
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    public void checkStatus() throws APINotWorkingException {
+        try {
+            URL url = new URL(String.format(API_URL_TEMPLATE_SHOPS, groupId));
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("GET");
+            connection.setRequestProperty("Content-Type", "application/json");
+
+            int responseCode = connection.getResponseCode();
+            if (responseCode != HttpURLConnection.HTTP_OK) // API is up and running!
+                throw new APINotWorkingException("Error: The API isn’t available.\n");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 }

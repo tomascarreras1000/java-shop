@@ -16,7 +16,7 @@ public class ShopDAOLocal implements ShopDAO {
         this.gson = new Gson();
     }
 
-    public LinkedList<Shop> readShop() throws LocalFilesException{
+    public LinkedList<Shop> getShops() throws LocalFilesException{
         LinkedList<Shop> shops = new LinkedList<>();
         try (FileReader reader = new FileReader("JavaShop/files/shops.json")) {
             JsonParser parser = new JsonParser();
@@ -65,7 +65,7 @@ public class ShopDAOLocal implements ShopDAO {
      * @param shopPosition
      */
     public void removeShop(int shopPosition) throws LocalFilesException{
-            LinkedList<Shop> shops = readShop();
+            LinkedList<Shop> shops = getShops();
             shops.remove(shopPosition);
             updateShops(shops);
     }
@@ -76,7 +76,7 @@ public class ShopDAOLocal implements ShopDAO {
      * @param shopToRemove
      */
     public void removeShop(Shop shopToRemove) throws LocalFilesException{
-        LinkedList<Shop> shops = readShop();
+        LinkedList<Shop> shops = getShops();
         for (Shop shop : shops) {
             if (shop.getName().equals(shopToRemove.getName())) {
                 shops.remove(shop);
@@ -92,7 +92,7 @@ public class ShopDAOLocal implements ShopDAO {
      * @param shopName
      */
     public void removeShop(String shopName) throws LocalFilesException{
-        LinkedList<Shop> shops = readShop();
+        LinkedList<Shop> shops = getShops();
         for (Shop shop : shops) {
             if (shop.getName().equals(shopName)) {
                 shops.remove(shop);
@@ -108,7 +108,7 @@ public class ShopDAOLocal implements ShopDAO {
      * @param shopToUpdate
      */
     public void updateShops(Shop shopToUpdate) throws LocalFilesException{
-        LinkedList<Shop> shops = readShop();
+        LinkedList<Shop> shops = getShops();
         for (Shop shop : shops) {
             if (shop.getName().equals(shopToUpdate.getName())) {
                 shops.remove(shop);
@@ -124,7 +124,7 @@ public class ShopDAOLocal implements ShopDAO {
      *
      * @param shopList
      */
-    public void updateShops(List<Shop> shopList) {
+    public void updateShops(LinkedList<Shop> shopList) {
 
         JsonArray shopsArray = new JsonArray();
 
@@ -147,7 +147,7 @@ public class ShopDAOLocal implements ShopDAO {
     }
 
     public void createShop(Shop shop) throws LocalFilesException{
-        LinkedList<Shop> shops = readShop();
+        LinkedList<Shop> shops = getShops();
         shops.add(shop);
         updateShops(shops);
     }
@@ -188,6 +188,6 @@ public class ShopDAOLocal implements ShopDAO {
     }
 
     public void checkStatus() throws LocalFilesException{
-        readShop();
+        getShops();
     }
 }
