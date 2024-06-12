@@ -79,5 +79,6 @@ public class ProductManager {
     public void writeReview(BaseProduct product, String text, int stars) throws PersistanceException {
         ProductReview review = new ProductReview(text, stars);
         product.addReview(review);
+        productDAO.updateProducts(product);
     }
 }

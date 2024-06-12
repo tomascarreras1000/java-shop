@@ -5,6 +5,7 @@ import exceptions.*;
 
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -50,7 +51,7 @@ public class Controller {
                 runShopListMenu();
                 break;
             case 5:
-                //optionFive();
+                runCartMenu();
                 break;
             case 6:
                 ui.showMessage("\nWe hope to see you again!");
@@ -294,7 +295,7 @@ public class Controller {
 
     private void runSearchMenu() throws PersistanceException, BusinessException {
         // Query field
-        String query = ui.askForString("Enter your query: ");
+        String query = ui.askForString("\nEnter your query: ");
         LinkedList<BaseProduct> products = productManager.getAllProductsContainingText(query);
 
         if (products.isEmpty()) {
@@ -302,24 +303,24 @@ public class Controller {
             return;
         }
 
-        ui.showMessage("The following products were found:");
+        ui.showMessage("\nThe following products were found:");
         int index = 1;
         for (Product product : products) {
-            ui.showMessage(index + ") \"" + product.getName() + "\" by \"" + product.getBrand() + "\"");
+            ui.showMessage("\t" + index + ") \"" + product.getName() + "\" by \"" + product.getBrand() + "\"");
 
             LinkedList<Shop> sellingShops = shopManager.getAllShopsWithProduct(product);
             if (sellingShops.isEmpty()) {
-                ui.showMessage("This product is not currently being sold in any shop.");
+                ui.showMessage("\tThis product is not currently being sold in any shop.");
             } else {
                 for (Shop sellingShop : sellingShops) {
-                    ui.showMessage("Sold at:");
+                    ui.showMessage("\t\tSold at:");
                     float price = sellingShop.getPriceFromProduct(product);
-                    ui.showMessage("- " + sellingShop.getName() + ": " + price);
+                    ui.showMessage("\t\t\t- " + sellingShop.getName() + ": " + price);
                 }
             }
             index++;
         }
-        ui.showMessage(index + ") Back");
+        ui.showMessage("\t" + index + ") Back");
 
         int choice = ui.askForInteger("Select a product: ");
         if (choice == index) {
@@ -360,7 +361,7 @@ public class Controller {
                 ui.showMessage("\nAverage rating: " + String.format("%.2f", averageRating) + "*"); // TODO: double check this
                 break;
             case 2:
-                int stars = ui.askForInteger("\nRate the product from 1 to 5");
+                int stars = ui.askForInteger("\nRate the product from 1 to 5: ");
                 if (stars < 1 || stars > 5) {
                     ui.showMessage("Invalid choice. Please enter a valid option.");
                     return;
@@ -418,8 +419,8 @@ public class Controller {
             return;
         }
 
-        Product selectedProduct = catalogue.get(productChoice - 1);
-        selectedProduct = productManager.findProductByName(selectedProduct.getName());
+        RetailProduct selectedProduct = catalogue.get(productChoice - 1);
+        BaseProduct baseProduct = productManager.findProductByName(selectedProduct.getName());
 
         ui.showMessage("1) Read Reviews");
         ui.showMessage("2) Review Product");
@@ -427,7 +428,7 @@ public class Controller {
         int productOption = ui.askForInteger("Choose an option: ");
         switch (productOption) {
             case 1:
-                List<ProductReview> reviews = ((BaseProduct)selectedProduct).getReviews();
+                List<ProductReview> reviews = (baseProduct).getReviews();
                 if (reviews.isEmpty()) {
                     ui.showMessage("There are no reviews for this product yet.");
                     return;
@@ -444,22 +445,72 @@ public class Controller {
                 ui.showMessage("\nAverage rating: " + String.format("%.2f", averageRating) + "*"); // TODO: double check this
                 break;
             case 2:
-                int stars = ui.askForInteger("\nRate the product from 1 to 5");
+                int stars = ui.askForInteger("\nRate the product from 1 to 5: ");
                 if (stars < 1 || stars > 5) {
                     ui.showMessage("Invalid choice. Please enter a valid option.");
                     return;
                 }
                 String text = ui.askForString("Please enter the review: ");
-                productManager.writeReview((BaseProduct)selectedProduct, text, stars);
+                productManager.writeReview(baseProduct, text, stars);
                 ui.showMessage("The " + stars + "* review has been added to the product.");
                 break;
             case 3:
-                //addToCart(selectedProduct);
-                //ui.showMessage("1x \"" + selectedProduct.getName() + "\" by \"" + selectedProduct.getProductBrand() + "\" has been added to your cart.");
+                cartManager.addProduct(selectedProduct, selectedShop);
+                ui.showMessage("1x \"" + selectedProduct.getName() + "\" by \"" + selectedProduct.getBrand() + "\" has been added to your cart.");
                 break;
             default:
                 ui.showMessage("Invalid option. Returning to main menu.");
                 break;
         }
+    }
+
+    private void runCartMenu() {
+        HashMap<String, LinkedList<RetailProduct>> cart = cartManager.getCart();
+        if (cart.isEmpty()) {
+            ui.showMessage("Your cart is empty.");
+        } else {
+            ui.showMessage("Your cart contains the following items:");
+            float total = 0;
+            for (LinkedList<RetailProduct> list : cart.values()) {
+                for (RetailProduct retailProduct : list) {
+                    ui.showMessage("\t- \"" + retailProduct.getName() + "\" by \"" + retailProduct.getBrand() + "\"\n");
+                    ui.showMessage("\t\tPrice: " + retailProduct.getRetailPrice() + "\n");
+                    total += retailProduct.getRetailPrice();
+                }
+            }
+            ui.showMessage("Total: " + total);
+        }
+
+        ui.showMessage("1) Checkout");
+        ui.showMessage("2) Clear cart");
+        ui.showMessage("3) Back");
+
+        int cartOption = ui.askForInteger("Choose an option: ");
+        switch (cartOption) {
+            case 1:
+                String confirmCheckout = ui.askForString("Are you sure you want to checkout? ");
+                if (confirmCheckout.equalsIgnoreCase("YES")) {
+                    // TODO: Compra
+                } else {
+                    ui.showMessage("Checkout cancelled.");
+                }
+                break;
+            case 2:
+                String confirmClear = ui.askForString("Are you sure you want to clear your cart? ");
+                if (confirmClear.equalsIgnoreCase("YES")) {
+                    cartManager.clearCart();
+                    ui.showMessage("Your cart has been cleared.");
+                } else {
+                    ui.showMessage("Clear cart cancelled.");
+                }
+                break;
+            case 3:
+                ui.showMessage("Returning to the main menu.");
+                break;
+            default:
+                ui.showMessage("Invalid option. Returning to main menu.");
+                break;
+        }
+
     }
 }
