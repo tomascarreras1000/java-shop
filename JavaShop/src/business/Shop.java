@@ -15,6 +15,7 @@ public abstract class Shop {
     public void addProduct(RetailProduct product) {
         catalogue.add(product);
     }
+
     public void removeProduct(Product product) {
         catalogue.remove(product);
     }
@@ -26,7 +27,7 @@ public abstract class Shop {
     public String getDescription() {
         return description;
     }
-    
+
     public int getSince() {
         return since;
     }
@@ -46,5 +47,36 @@ public abstract class Shop {
             }
         }
         throw new ProductNotFoundException(product.getName());
+    }
+
+    /**
+     * @param products
+     * @throws BusinessException
+     */
+    public float purchaseProducts(LinkedList<RetailProduct> products) throws BusinessException {
+        float newEarnings = 0;
+        for (RetailProduct product : products) {
+            newEarnings = newEarnings + getPriceFromProduct(product);
+        }
+        this.earnings = this.earnings + newEarnings;
+        return newEarnings;
+    }
+
+    //TODO: implement this method
+    public float calculateOriginalPrice(RetailProduct product) {
+        switch (product.getCategory()) {
+            case "General":
+                return product.getRetailPrice() / (1 + (21 / 100));
+            case "Reduced":
+                if (product.getAverageStars() > 3.5)
+                    return product.getRetailPrice() / (1 + (5 / 100));
+                return product.getRetailPrice() / (1 + (10 / 100));
+            case "SuperReduced":
+                if (product.getRetailPrice() > 100)
+                    return product.getRetailPrice();
+                return product.getRetailPrice() / (1 + (4 / 100));
+            default:
+                return product.getRetailPrice();
+        }
     }
 }
