@@ -18,14 +18,15 @@ public class Main {
         // Check if API is working
         System.out.println("Checking API status...");
         try {
-            productDAO.checkStatus();
+            throw new PersistanceException("API is down");
+            /*productDAO.checkStatus();
             shopDAO.checkStatus();
 
             CartManager cartManager = new CartManager();
             ProductManager productManager = new ProductManager(productDAO);
             ShopManager shopManager = new ShopManager(shopDAO);
             Controller controller = new Controller(ui, productManager, cartManager, shopManager);
-            controller.mainMenu();
+            controller.mainMenu();*/
         } catch (PersistanceException eAPI) {
             System.out.println(eAPI.getMessage());
 

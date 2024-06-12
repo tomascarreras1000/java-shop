@@ -50,7 +50,7 @@ public class ProductDAOLocal implements ProductDAO {
     public void updateProducts(LinkedList<BaseProduct> productList) throws LocalFilesException {
         FileWriter writer = null;
         try {
-            writer = new FileWriter("files/products.json");
+            writer = new FileWriter("JavaShop/files/products.json");
             gson.toJson(productList, writer);
             writer.flush();
             writer.close();

@@ -7,5 +7,21 @@
     "sponsorBrand": "ISIS",
     "businessModel": "SPONSORED",
     "catalogue": []
+  },
+  {
+    "name": "º",
+    "description": "ª",
+    "since": 1,
+    "earnings": 0.0,
+    "businessModel": "MAX_PROFIT",
+    "catalogue": []
+  },
+  {
+    "name": "caca",
+    "description": "culo",
+    "since": 2134,
+    "earnings": 0.0,
+    "businessModel": "MAX_PROFIT",
+    "catalogue": []
   }
 ]

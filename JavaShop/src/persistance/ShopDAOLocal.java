@@ -16,7 +16,7 @@ public class ShopDAOLocal implements ShopDAO {
         this.gson = new Gson();
     }
 
-    public LinkedList<Shop> getShops() throws LocalFilesException{
+    public LinkedList<Shop> getShops() throws LocalFilesException {
         LinkedList<Shop> shops = new LinkedList<>();
         try (FileReader reader = new FileReader("JavaShop/files/shops.json")) {
             JsonParser parser = new JsonParser();
@@ -29,7 +29,7 @@ public class ShopDAOLocal implements ShopDAO {
 
                         LinkedList<RetailProduct> list = new LinkedList();
                         for (JsonElement e : shopObject.get("catalogue").getAsJsonArray()) {
-                            list.add(new RetailProduct(e.getAsJsonObject().get("name").getAsString(),e.getAsJsonObject().get("brand").getAsString(), e.getAsJsonObject().get("category").getAsString(), e.getAsJsonObject().get("retailPrice").getAsFloat()));
+                            list.add(new RetailProduct(e.getAsJsonObject().get("name").getAsString(), e.getAsJsonObject().get("brand").getAsString(), e.getAsJsonObject().get("category").getAsString(), e.getAsJsonObject().get("retailPrice").getAsFloat()));
                         }
 
                         switch (shopObject.get("businessModel").getAsString()) {
@@ -38,11 +38,11 @@ public class ShopDAOLocal implements ShopDAO {
                                 shops.add(sponsoredShop);
                                 break;
                             case "LOYALTY":
-                                LoyaltyShop loyaltyShop = new LoyaltyShop(shopObject.get("name").getAsString(), shopObject.get("description").getAsString(), shopObject.get("since").getAsInt(), shopObject.get("earnings").getAsFloat(), shopObject.get("loyaltyThreshold").getAsInt(), new LinkedList(Arrays.asList(shopObject.get("catalogue").getAsJsonArray())));
+                                LoyaltyShop loyaltyShop = new LoyaltyShop(shopObject.get("name").getAsString(), shopObject.get("description").getAsString(), shopObject.get("since").getAsInt(), shopObject.get("earnings").getAsFloat(), shopObject.get("loyaltyThreshold").getAsInt(), list);
                                 shops.add(loyaltyShop);
                                 break;
                             case "MAX_PROFIT":
-                                MaxProfitShop maxProfitShop = new MaxProfitShop(shopObject.get("name").getAsString(), shopObject.get("description").getAsString(), shopObject.get("since").getAsInt(), shopObject.get("earnings").getAsFloat(), new LinkedList(Arrays.asList(shopObject.get("catalogue").getAsJsonArray())));
+                                MaxProfitShop maxProfitShop = new MaxProfitShop(shopObject.get("name").getAsString(), shopObject.get("description").getAsString(), shopObject.get("since").getAsInt(), shopObject.get("earnings").getAsFloat(), list);
                                 shops.add(maxProfitShop);
                                 break;
                             default:
@@ -64,10 +64,10 @@ public class ShopDAOLocal implements ShopDAO {
      *
      * @param shopPosition
      */
-    public void removeShop(int shopPosition) throws LocalFilesException{
-            LinkedList<Shop> shops = getShops();
-            shops.remove(shopPosition);
-            updateShops(shops);
+    public void removeShop(int shopPosition) throws LocalFilesException {
+        LinkedList<Shop> shops = getShops();
+        shops.remove(shopPosition);
+        updateShops(shops);
     }
 
     /**
@@ -75,7 +75,7 @@ public class ShopDAOLocal implements ShopDAO {
      *
      * @param shopToRemove
      */
-    public void removeShop(Shop shopToRemove) throws LocalFilesException{
+    public void removeShop(Shop shopToRemove) throws LocalFilesException {
         LinkedList<Shop> shops = getShops();
         for (Shop shop : shops) {
             if (shop.getName().equals(shopToRemove.getName())) {
@@ -91,7 +91,7 @@ public class ShopDAOLocal implements ShopDAO {
      *
      * @param shopName
      */
-    public void removeShop(String shopName) throws LocalFilesException{
+    public void removeShop(String shopName) throws LocalFilesException {
         LinkedList<Shop> shops = getShops();
         for (Shop shop : shops) {
             if (shop.getName().equals(shopName)) {
@@ -107,7 +107,7 @@ public class ShopDAOLocal implements ShopDAO {
      *
      * @param shopToUpdate
      */
-    public void updateShops(Shop shopToUpdate) throws LocalFilesException{
+    public void updateShops(Shop shopToUpdate) throws LocalFilesException {
         LinkedList<Shop> shops = getShops();
         for (Shop shop : shops) {
             if (shop.getName().equals(shopToUpdate.getName())) {
@@ -138,7 +138,7 @@ public class ShopDAOLocal implements ShopDAO {
             }
         }
 
-        try (FileWriter writer = new FileWriter("files/shops.json")) {
+        try (FileWriter writer = new FileWriter("JavaShop/files/shops.json")) {
             Gson gson = new GsonBuilder().setPrettyPrinting().create();
             gson.toJson(shopsArray, writer);
         } catch (IOException e) {
@@ -146,7 +146,7 @@ public class ShopDAOLocal implements ShopDAO {
         }
     }
 
-    public void createShop(Shop shop) throws LocalFilesException{
+    public void createShop(Shop shop) throws LocalFilesException {
         LinkedList<Shop> shops = getShops();
         shops.add(shop);
         updateShops(shops);
@@ -187,7 +187,7 @@ public class ShopDAOLocal implements ShopDAO {
         return shopObject;
     }
 
-    public void checkStatus() throws LocalFilesException{
+    public void checkStatus() throws LocalFilesException {
         getShops();
     }
 }
