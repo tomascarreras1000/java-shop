@@ -56,7 +56,7 @@ public class ProductManager {
      * @param name
      * @return
      */
-    public BaseProduct findProductByName(String name) throws PersistanceException, FileNotFoundException {
+    public BaseProduct findProductByName(String name) throws PersistanceException {
         BaseProduct returnProduct = null;
 
         for (BaseProduct baseProduct : productDAO.getProducts()) {

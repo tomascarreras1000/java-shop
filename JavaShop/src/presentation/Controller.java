@@ -1,10 +1,7 @@
 package presentation;
 
 import business.*;
-import exceptions.BusinessException;
-import exceptions.InvalidRetailPriceException;
-import exceptions.PersistanceException;
-import exceptions.ProductNotFoundException;
+import exceptions.*;
 
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -65,7 +62,6 @@ public class Controller {
     }
 
 
-
     public void runProductsMenu() throws Exception {
         int option;
         do {
@@ -97,7 +93,10 @@ public class Controller {
 
     private void productsOptionOne() throws PersistanceException, Exception {
         String productName = ui.askForString("\nPlease enter the product's name: ");
-        String productBrand = ui.askForString("Please enter the product's brand: ");
+        if (productManager.findProductByName(productName) != null)
+            throw new Exception("\"" + productName + "\" name is taken.");
+
+        String productBrand = ui.askForStringFormatted("Please enter the product's brand: ");
         float productMaxPrice = ui.askForFloat("Please enter the product's maximum retail price: ");
 
         ui.showMessage("\nThe system supports the following product categories: ");
@@ -121,14 +120,17 @@ public class Controller {
         boolean continueRemoving = true;
         while (continueRemoving) {
             ui.showMessage("These are the currently available products: \n");
+            ui.showMessage("0. Back\n");
             for (int i = 0; i < productList.size(); i++) {
                 Product product = productList.get(i);
                 ui.showMessage((i + 1) + ". " + product.getDescription());
             }
             int productPosition = ui.askForInteger("\nWhich one would you like to remove? ");
 
-            if (productPosition < 1 || productPosition > productList.size()) {
+            if (productPosition < 0 || productPosition > productList.size()) {
                 ui.showMessage("\nERROR: Choose an existing option.");
+            } else if (productPosition == 0) {
+                break;
             } else {
                 Product selectedProduct = productList.get(productPosition - 1);
 
@@ -139,8 +141,6 @@ public class Controller {
                     shopManager.removeBaseProduct(productList.get(productPosition - 1));
 
                     ui.showMessage("\n" + selectedProduct.getDescription() + " has been withdrawn from sale.");
-                    continueRemoving = false;
-                } else {
                     continueRemoving = false;
                 }
             }
@@ -185,59 +185,83 @@ public class Controller {
 
     /**
      * New shop menu
-     * @throws Exception is an invalid business model is entered
+     *
+     * @throws Exception if an invalid business model is entered
      */
     private void shopsOptionOne() throws PersistanceException, Exception {
+        // Name field
         String shopName = ui.askForString("\nPlease enter the shop's name: ");
-        String shopDescription = ui.askForString("Please enter the shop's description: ");
-        int shopFoundationYear = ui.askForInteger("Please enter the shop's founding year: ");
+        if (shopManager.findShopByName(shopName) != null)
+            throw new Exception("\"" + shopName + "\" name is taken.");
 
+        // Description field
+        String shopDescription = ui.askForString("Please enter the shop's description: ");
+
+        // Foundation date field
+        int shopFoundationYear = ui.askForInteger("Please enter the shop's founding year: ");
+        if (shopFoundationYear < 0)
+            throw new Exception("\"" + shopFoundationYear + "\" is not a valid year.");
+
+        // Business model field/s
         ui.showMessage("\nThe system supports the following business models: \n");
-        ui.showMessage(" \tA) Maximum Benefits\n" +
-                " \tB) Loyalty\n" +
-                " \tC) Sponsored");
+        ui.showMessage("""
+                 \tA) Maximum Benefits
+                 \tB) Loyalty
+                 \tC) Sponsored\
+                """);
         String shopBusinessModel = ui.askForString("\nPlease pick the shop’s business model: ");
         shopBusinessModel = shopManager.getBusinessModelFromOptions(shopBusinessModel);
         if (shopBusinessModel == null) {
             throw new Exception("\nERROR: Choose a valid business model!");
-        }
-        else if (shopBusinessModel.equals("Loyalty")) {
+        } else if (shopBusinessModel.equals("Loyalty")) {
             float loyaltyThreshold = ui.askForFloat("\nPlease enter the shop's loyalty threshold: ");
             shopManager.createShop(shopName, shopDescription, shopFoundationYear, loyaltyThreshold);
-        }
-        else if (shopBusinessModel.equals("Sponsored")) {
+        } else if (shopBusinessModel.equals("Sponsored")) {
             String sponsorBrand = ui.askForString("\nPlease enter the shop's sponsor brand: ");
             shopManager.createShop(shopName, shopDescription, shopFoundationYear, sponsorBrand);
-        }
-        else {
+        } else {
             shopManager.createShop(shopName, shopDescription, shopFoundationYear);
         }
+
+        // Confirmation output
         ui.showMessage("\n\"" + shopName + "\" is now a part of the elCofre family.");
     }
 
     /**
      * Catalogue expansion menu
+     *
      * @throws Exception
      */
-    private void shopsOptionTwo() throws PersistanceException, BusinessException, FileNotFoundException {
+    private void shopsOptionTwo() throws PersistanceException, BusinessException {
+        // Shop name field
         String shopName = ui.askForString("\nPlease enter the shop's name: ");
+        if (shopManager.findShopByName(shopName) == null)
+            throw new ShopNotFoundException(shopName);
+
+        // Product name field
         String productName = ui.askForString("Please enter the product's name: ");
-        float currentPrice = ui.askForFloat("Please enter the product’s price at this shop: ");
-
         BaseProduct product = productManager.findProductByName(productName);
-        if (product == null) {
-            throw new ProductNotFoundException(product.getName());
-        }
-        String productBrand = product.getBrand();
+        if (product == null)
+            throw new ProductNotFoundException(productName);
 
+        // Price field
+        float currentPrice = ui.askForFloat("Please enter the product’s price at this shop: ");
+        if (currentPrice > product.getMaxRetailPrice())
+            throw new InvalidRetailPriceException("Invalid retail price");
+
+        String productBrand = product.getBrand();
         shopManager.addProductToShop(shopName, productManager.createRetailProductFromBaseProduct(product, currentPrice));
 
-        ui.showMessage("\"" + productName + "\" by \""+ productBrand + "\" is now being sold at \"" + shopName + "\".");
+        ui.showMessage("\"" + productName + "\" by \"" + productBrand + "\" is now being sold at \"" + shopName + "\".");
     }
 
-    private void shopsOptionThree() throws PersistanceException, Exception {
+    private void shopsOptionThree() throws PersistanceException, BusinessException, Exception {
+        // Name field
         String shopName = ui.askForString("Please enter the shop’s name: ");
         Shop shop = shopManager.findShopByName(shopName);
+        if (shop == null)
+            throw new ShopNotFoundException(shopName);
+
         LinkedList<RetailProduct> catalog = shop.getCatalogue();
 
         if (catalog.isEmpty()) {
@@ -245,7 +269,7 @@ public class Controller {
             return;
         }
 
-        ui.showMessage("This shop sells the following products: \n");
+        ui.showMessage("This shop sells the following products: \n0. Back\n");
         for (int i = 0; i < catalog.size(); i++) {
             Product product = catalog.get(i);
             ui.showMessage((i + 1) + ". " + product.getDescription());
@@ -253,8 +277,10 @@ public class Controller {
 
         int productPosition = ui.askForInteger("\nWhich one would you like to remove? ");
 
-        if (productPosition < 1 || productPosition > catalog.size()) {
+        if (productPosition < 0 || productPosition > catalog.size()) {
             ui.showMessage("\nERROR: Choose an existing option.");
+        } else if (productPosition == 0) {
+            return;
         } else {
             RetailProduct selectedProduct = catalog.get(productPosition - 1);
             String productName = selectedProduct.getName();
@@ -265,6 +291,7 @@ public class Controller {
 
         }
     }
+
     private void runSearchMenu() {
 //        String query = ui.askForString("Enter your query: ");
 //
@@ -322,6 +349,7 @@ public class Controller {
 //                break;
 //        }
     }
+
     private void addBaseProduct(BaseProduct baseProduct) {
 
     }

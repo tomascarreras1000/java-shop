@@ -7,6 +7,7 @@ import persistance.ShopDAO;
 
 public class ShopManager {
     private ShopDAO shopDAO;
+
     public ShopManager(ShopDAO shopDAO) {
         this.shopDAO = shopDAO;
     }
@@ -16,12 +17,12 @@ public class ShopManager {
         shopDAO.createShop(shop);
     }
 
-    public void createShop(String name, String description, int since, float loyaltyThreshold) throws PersistanceException{
+    public void createShop(String name, String description, int since, float loyaltyThreshold) throws PersistanceException {
         Shop shop = new LoyaltyShop(name, description, since, loyaltyThreshold);
         shopDAO.createShop(shop);
     }
 
-    public void createShop(String name, String description, int since, String sponsorBrand)throws PersistanceException {
+    public void createShop(String name, String description, int since, String sponsorBrand) throws PersistanceException {
         Shop shop = new SponsoredShop(name, description, since, sponsorBrand);
         shopDAO.createShop(shop);
     }
@@ -40,6 +41,7 @@ public class ShopManager {
 
     /**
      * Finds a shop with provided name. Note that this search is case-sensitive.
+     *
      * @param name
      * @return
      */
@@ -74,8 +76,7 @@ public class ShopManager {
         if (shop.getCatalogue().contains(productToRemove)) {
             shop.getCatalogue().remove(productToRemove);
             shopDAO.updateShops(shop);
-        }
-        else
+        } else
             throw new Exception("\nERROR Product does not belong to shop.");
     }
 
