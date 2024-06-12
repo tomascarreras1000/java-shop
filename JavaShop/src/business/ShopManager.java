@@ -5,6 +5,8 @@ import exceptions.PersistanceException;
 import exceptions.ProductAlreadyExistsException;
 import persistance.ShopDAO;
 
+import java.util.LinkedList;
+
 public class ShopManager {
     private ShopDAO shopDAO;
 
@@ -88,5 +90,19 @@ public class ShopManager {
                     shopDAO.updateShops(shop);
                 }
         }
+    }
+
+    public LinkedList<Shop> getAllShopsWithProduct(Product product) throws PersistanceException {
+        LinkedList<Shop> shops = new LinkedList<Shop>();
+        for (Shop shop : shopDAO.getShops()) {
+            for (RetailProduct retailProduct : shop.getCatalogue())
+                if (retailProduct.getName().equalsIgnoreCase(product.getName()))
+                    shops.add(shop);
+        }
+        return shops;
+    }
+
+    public LinkedList<Shop> getShops() throws PersistanceException {
+        return shopDAO.getShops();
     }
 }

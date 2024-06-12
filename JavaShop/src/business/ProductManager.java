@@ -4,7 +4,6 @@ import exceptions.InvalidRetailPriceException;
 import exceptions.PersistanceException;
 import persistance.ProductDAO;
 
-import java.io.FileNotFoundException;
 import java.util.LinkedList;
 
 public class ProductManager {
@@ -15,7 +14,7 @@ public class ProductManager {
     }
 
     public void createBaseProduct(String name, String brand, String category, float maxRetailPrice) throws PersistanceException, Exception {
-        category = AssignCategory(category);
+        category = assignCategory(category);
         if (category == null)
             throw new Exception("Invalid category");
 
@@ -30,7 +29,7 @@ public class ProductManager {
         return new RetailProduct(baseProduct, retailPrice);
     }
 
-    private String AssignCategory(String category) {
+    private String assignCategory(String category) {
         if (category.equalsIgnoreCase("A")) {
             return "General";
         } else if (category.equalsIgnoreCase("B")) {
@@ -50,6 +49,15 @@ public class ProductManager {
         return productDAO.getProducts();
     }
 
+    public LinkedList<BaseProduct> getAllProductsContainingText(String text) throws PersistanceException {
+        LinkedList<BaseProduct> ret = new LinkedList<BaseProduct>();
+        for (BaseProduct baseProduct : productDAO.getProducts()) {
+            if (baseProduct.getName().toLowerCase().contains(text.toLowerCase()) || baseProduct.getBrand().equals(text))
+                ret.add(baseProduct);
+        }
+        return productDAO.getProducts();
+    }
+
     /**
      * Finds a product with provided name. Note that this search is case-sensitive.
      *
@@ -66,5 +74,10 @@ public class ProductManager {
             }
         }
         return returnProduct;
+    }
+
+    public void writeReview(BaseProduct product, String text, int stars) throws PersistanceException {
+        ProductReview review = new ProductReview(text, stars);
+        product.addReview(review);
     }
 }

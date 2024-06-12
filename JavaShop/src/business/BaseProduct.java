@@ -31,4 +31,8 @@ public class BaseProduct extends Product {
     public float getMaxRetailPrice() {
         return maxRetailPrice;
     }
+
+    public LinkedList<ProductReview> getReviews() {
+        return reviews;
+    }
 }

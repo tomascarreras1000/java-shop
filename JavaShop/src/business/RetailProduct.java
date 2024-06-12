@@ -19,4 +19,8 @@ public class RetailProduct extends Product {
         this.category = baseProduct.getCategory();
         this.retailPrice = retailPrice;
     }
+
+    public float getRetailPrice() {
+        return retailPrice;
+    }
 }

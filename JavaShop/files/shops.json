@@ -23,5 +23,20 @@
     "earnings": 0.0,
     "businessModel": "MAX_PROFIT",
     "catalogue": []
+  },
+  {
+    "name": "DaShop",
+    "description": "asd",
+    "since": 123,
+    "earnings": 0.0,
+    "businessModel": "MAX_PROFIT",
+    "catalogue": [
+      {
+        "retailPrice": 10.0,
+        "name": "IED",
+        "brand": "ISIS S.A",
+        "category": "Reduced"
+      }
+    ]
   }
 ]

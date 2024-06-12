@@ -32,7 +32,7 @@ public class Main {
 
             // Check if local data can be accessed
             System.out.println("Verifying local files...");
-            //productDAO = new ProductDAOLocal();
+            productDAO = new ProductDAOLocal();
             shopDAO = new ShopDAOLocal();
             try {
                 productDAO.checkStatus();

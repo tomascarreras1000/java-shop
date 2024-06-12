@@ -1,5 +1,8 @@
 package business;
 
+import exceptions.BusinessException;
+import exceptions.ProductNotFoundException;
+
 import java.util.LinkedList;
 
 public abstract class Shop {
@@ -36,4 +39,12 @@ public abstract class Shop {
         return catalogue;
     }
 
+    public float getPriceFromProduct(Product product) throws BusinessException {
+        for (RetailProduct retailProduct : catalogue) {
+            if (retailProduct.getName().equals(product.getName())) {
+                return retailProduct.getRetailPrice();
+            }
+        }
+        throw new ProductNotFoundException(product.getName());
+    }
 }
