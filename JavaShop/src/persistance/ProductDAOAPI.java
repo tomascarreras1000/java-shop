@@ -44,7 +44,7 @@ public class ProductDAOAPI implements ProductDAO{
 
     }
     @Override
-    public void removeProduct(BaseProduct product) {
+    public void removeProduct(BaseProduct product) throws APINotWorkingException {
 
         LinkedList<BaseProduct> products = getProducts();
         for(int i = 0; i < products.size(); i++){
@@ -93,8 +93,6 @@ public class ProductDAOAPI implements ProductDAO{
                     response.append(line);
                 }
                 reader.close();
-
-                throw new APINotWorkingException("Response: " + response.toString());
             } else {
                 throw new APINotWorkingException("Failed to create product, HTTP response code: " + responseCode);
             }

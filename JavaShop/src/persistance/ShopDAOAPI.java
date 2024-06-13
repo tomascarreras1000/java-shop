@@ -108,8 +108,6 @@ public class ShopDAOAPI implements ShopDAO {
                     response.append(line);
                 }
                 reader.close();
-
-                throw new APINotWorkingException("Response: " + response.toString());
             } else {
                 throw new APINotWorkingException("Failed to create shop, HTTP response code: " + responseCode);
             }
