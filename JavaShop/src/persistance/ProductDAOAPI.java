@@ -44,7 +44,7 @@ public class ProductDAOAPI implements ProductDAO{
 
     }
     @Override
-    public void removeProduct(BaseProduct product) {
+    public void removeProduct(BaseProduct product) throws APINotWorkingException {
 
         LinkedList<BaseProduct> products = getProducts();
         for(int i = 0; i < products.size(); i++){
@@ -93,10 +93,8 @@ public class ProductDAOAPI implements ProductDAO{
                     response.append(line);
                 }
                 reader.close();
-
-                System.out.println("Response: " + response.toString());
             } else {
-                System.out.println("Failed to create product, HTTP response code: " + responseCode);
+                throw new APINotWorkingException("Failed to create product, HTTP response code: " + responseCode);
             }
 
         } catch (IOException e) {
@@ -104,7 +102,7 @@ public class ProductDAOAPI implements ProductDAO{
         }
     }
 
-    public LinkedList<BaseProduct> getProducts() {
+    public LinkedList<BaseProduct> getProducts() throws APINotWorkingException{
 
         try {
             URL url = new URL(String.format(API_URL_TEMPLATE_PRODUCTS, groupId));
@@ -125,7 +123,7 @@ public class ProductDAOAPI implements ProductDAO{
                 Type productListType = new TypeToken<LinkedList<BaseProduct>>(){}.getType();
                 return gson.fromJson(response.toString(), productListType);
             } else {
-                System.out.println("Failed to fetch products, HTTP response code: " + responseCode);
+                throw new APINotWorkingException("Failed to fetch products, HTTP response code: " + responseCode);
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -134,7 +132,7 @@ public class ProductDAOAPI implements ProductDAO{
     }
 
     //si voleu buscar nomes per nom poseu els altres parametres a null
-    private LinkedList<BaseProduct> searchProducts(String name, String brand, Double mrp, String category) {
+    private LinkedList<BaseProduct> searchProducts(String name, String brand, Double mrp, String category) throws APINotWorkingException{
         Gson gson = new Gson();
         try {
             String urlWithParameters = buildUrlWithParameters(groupId, name, brand, mrp, category);
@@ -156,12 +154,11 @@ public class ProductDAOAPI implements ProductDAO{
                 Type productListType = new TypeToken<LinkedList<BaseProduct>>(){}.getType();
                 return gson.fromJson(response.toString(), productListType);
             } else {
-                System.out.println("Failed to search products, HTTP response code: " + responseCode);
+                throw new APINotWorkingException("Failed to search products, HTTP response code: " + responseCode);
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new APINotWorkingException(e.getMessage());
         }
-        return null;
     }
 
     private String buildUrlWithParameters(String groupId, String name, String brand, Double mrp, String category) {
@@ -174,7 +171,7 @@ public class ProductDAOAPI implements ProductDAO{
         return String.format(API_URL_TEMPLATE_PRODUCTS, groupId) + "?" + joiner.toString();
     }
 
-    private BaseProduct getProductByPosition(int position) {
+    private BaseProduct getProductByPosition(int position) throws APINotWorkingException{
         Gson gson = new Gson();
         try {
             URL url = new URL(String.format(API_URL_TEMPLATE_PRODUCTS_POSITION, groupId, position));
@@ -194,15 +191,14 @@ public class ProductDAOAPI implements ProductDAO{
 
                 return gson.fromJson(response.toString(), BaseProduct.class);
             } else {
-                System.out.println("Failed to retrieve product, HTTP response code: " + responseCode);
+                throw new APINotWorkingException("Failed to retrieve product, HTTP response code: " + responseCode);
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new APINotWorkingException(e.getMessage());
         }
-        return null;
     }
 
-    private void removeProducts(String name, String brand, Double mrp, String category) {
+    private void removeProducts(String name, String brand, Double mrp, String category) throws APINotWorkingException{
 
         try {
             String urlWithParameters = buildUrlWithParameters(groupId, name, brand, mrp, category);
@@ -221,15 +217,14 @@ public class ProductDAOAPI implements ProductDAO{
                 }
                 reader.close();
             } else {
-                System.out.println(connection.getResponseMessage());
+                throw new APINotWorkingException(connection.getResponseMessage());
             }
         } catch (IOException e) {
-            e.printStackTrace();
-            e.getMessage();
+            throw new APINotWorkingException(e.getMessage());
         }
     }
 
-    private BaseProduct removeProductByPosition(int position) {
+    private BaseProduct removeProductByPosition(int position) throws APINotWorkingException{
         Gson gson = new Gson();
         try {
             URL url = new URL(String.format(API_URL_TEMPLATE_PRODUCTS_POSITION, groupId, position));
@@ -247,10 +242,10 @@ public class ProductDAOAPI implements ProductDAO{
                 }
                 reader.close();
             } else {
-                System.out.println(connection.getResponseMessage());
+                throw new APINotWorkingException(connection.getResponseMessage());
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new APINotWorkingException(e.getMessage());
         }
         return null;
     }

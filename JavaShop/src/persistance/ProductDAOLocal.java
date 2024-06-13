@@ -27,16 +27,26 @@ public class ProductDAOLocal implements ProductDAO {
             reader = new FileReader("JavaShop/files/products.json");
             products = gson.fromJson(reader, BaseProduct[].class);
         } catch (FileNotFoundException e) {
-            throw new LocalFilesException("Error: The products.json file can’t be accessed.");
+            try {
+                FileWriter writer = new FileWriter("JavaShop/files/products.json");
+                writer.write("[]");
+                writer.flush();
+                writer.close();
+            } catch (IOException e2) {
+                throw new LocalFilesException(e2.getMessage());
+            }
         } finally {
             if (reader != null) {
                 try {
+                    products = gson.fromJson(reader, BaseProduct[].class);
                     reader.close();
                 } catch (IOException e) {
-                    System.out.println("Error closing the file! " + e.getMessage());
+                    throw new LocalFilesException("Error closing the file! " + e.getMessage());
                 }
             }
         }
+        if (products == null)
+            return new LinkedList<>();
         return new LinkedList<>(Arrays.asList(products));
     }
 

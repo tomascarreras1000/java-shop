@@ -5,9 +5,7 @@ import com.google.gson.*;
 import exceptions.LocalFilesException;
 
 import java.io.*;
-import java.util.Arrays;
 import java.util.LinkedList;
-import java.util.List;
 
 public class ShopDAOLocal implements ShopDAO {
     private Gson gson;
@@ -52,7 +50,14 @@ public class ShopDAOLocal implements ShopDAO {
                 }
             }
         } catch (FileNotFoundException e) {
-            throw new LocalFilesException("Error: The shops.json file can’t be accessed.");
+            try {
+                FileWriter writer = new FileWriter("JavaShop/files/shops.json");
+                writer.write("[]");
+                writer.flush();
+                writer.close();
+            } catch (IOException e2) {
+                throw new LocalFilesException(e2.getMessage());
+            }
         } catch (IOException e) {
             shops = new LinkedList<>();
         }

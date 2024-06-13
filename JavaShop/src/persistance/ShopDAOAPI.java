@@ -123,7 +123,7 @@ public class ShopDAOAPI implements ShopDAO {
     }
 
     public LinkedList<Shop> getShops() throws APINotWorkingException {
-        LinkedList<Shop> shops = new LinkedList<>();
+
         try {
             URL url = new URL(String.format(API_URL_TEMPLATE_SHOPS, groupId));
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -196,9 +196,9 @@ public class ShopDAOAPI implements ShopDAO {
                 throw new APINotWorkingException("Failed to fetch shops, HTTP response code: " + responseCode);
             }
         } catch (IOException e) {
-            throw new APINotWorkingException("Error connecting to API: " + e.getMessage());
+            throw new APINotWorkingException("Error: The API isn’t available.\n");
         }
-        return shops;
+        return null;
     }
 
     public void checkStatus() throws APINotWorkingException {
@@ -212,7 +212,7 @@ public class ShopDAOAPI implements ShopDAO {
             if (responseCode != HttpURLConnection.HTTP_OK) // API is up and running!
                 throw new APINotWorkingException("Error: The API isn’t available.\n");
         } catch (IOException e) {
-            throw new APINotWorkingException(e.getMessage());
+            throw new APINotWorkingException("Error: The API isn’t available.\n");
         }
     }
 
@@ -234,10 +234,10 @@ public class ShopDAOAPI implements ShopDAO {
                 }
                 reader.close();
             } else {
-                System.out.println(connection.getResponseMessage());
+                throw new APINotWorkingException(connection.getResponseMessage());
             }
         } catch (IOException e) {
-            throw new APINotWorkingException(e.getMessage());
+            throw new APINotWorkingException("Error: The API isn’t available.\n");
         }
     }
 
@@ -264,10 +264,10 @@ public class ShopDAOAPI implements ShopDAO {
                 }.getType();
                 return gson.fromJson(response.toString(), shopListType);
             } else {
-                System.out.println("Failed to search shops, HTTP response code: " + responseCode);
+                throw new APINotWorkingException("Failed to search shops, HTTP response code: " + responseCode);
             }
         } catch (IOException e) {
-            throw new APINotWorkingException(e.getMessage());
+            throw new APINotWorkingException("Error: The API isn’t available.\n");
         }
         return null;
     }
@@ -303,10 +303,10 @@ public class ShopDAOAPI implements ShopDAO {
 
                 return gson.fromJson(response.toString(), Shop.class);
             } else {
-                System.out.println("Failed to retrieve shop, HTTP response code: " + responseCode);
+                throw new APINotWorkingException("Failed to retrieve shop, HTTP response code: " + responseCode);
             }
         } catch (IOException e) {
-            throw new APINotWorkingException(e.getMessage());
+            throw new APINotWorkingException("Error: The API isn’t available.\n");
         }
         return null;
     }
