@@ -34,14 +34,37 @@ public class ProductDAOAPI implements ProductDAO{
     @Override
     public void updateProducts(LinkedList<BaseProduct> productList) {
 
+        for (BaseProduct product : productList) {
+            try {
+                updateProducts(product);
+            } catch (APINotWorkingException e) {
+                e.printStackTrace();
+            }
+        }
+
     }
     @Override
     public void removeProduct(BaseProduct product) {
 
+        LinkedList<BaseProduct> products = getProducts();
+        for(int i = 0; i < products.size(); i++){
+            if(products.get(i).equals(product)){
+                removeProductByPosition(i);
+                break;
+            }
+        }
+
     }
     @Override
-    public void updateProducts(BaseProduct updatedProduct) {
+    public void updateProducts(BaseProduct updatedProduct) throws APINotWorkingException {
 
+        for(int i = 0; i < getProducts().size(); i++){
+            if(getProducts().get(i).equals(updatedProduct)){
+                removeProductByPosition(i);
+                createProduct(updatedProduct);
+                break;
+            }
+        }
     }
     /***********************************DONE*********************************************/
     public void createProduct(BaseProduct product) throws APINotWorkingException{
