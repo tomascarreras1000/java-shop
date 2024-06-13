@@ -113,7 +113,7 @@ public class ShopDAOAPI implements ShopDAO {
                 }
                 reader.close();
 
-                Type shopListType = new TypeToken<List<Shop>>() {
+                Type shopListType = new TypeToken<LinkedList<Shop>>() {
                 }.getType();
                 return gson.fromJson(response.toString(), shopListType);
             } else {
@@ -165,7 +165,7 @@ public class ShopDAOAPI implements ShopDAO {
         }
     }
 
-    private List<Shop> searchShops(String name, String description, Integer foundation, String businessModel, Float totalEarnings) throws APINotWorkingException {
+    private LinkedList<Shop> searchShops(String name, String description, Integer foundation, String businessModel, Float totalEarnings) throws APINotWorkingException {
 
         try {
             String urlWithParameters = buildUrlWithParameters(groupId, name, description, foundation, businessModel, totalEarnings);
