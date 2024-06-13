@@ -18,6 +18,7 @@ public class LoyaltyShop extends Shop {
         this.catalogue = new LinkedList<RetailProduct>();
     }
 
+    // In case the current loyalty has to be persisted, currentLoyalty = earnings
     public LoyaltyShop(String name, String description, int since, float earnings, float loyaltyThreshold, LinkedList<RetailProduct> catalogue) {
         this.name = name;
         this.description = description;
