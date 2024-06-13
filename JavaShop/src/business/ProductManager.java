@@ -55,7 +55,7 @@ public class ProductManager {
             if (baseProduct.getName().toLowerCase().contains(text.toLowerCase()) || baseProduct.getBrand().equals(text))
                 ret.add(baseProduct);
         }
-        return productDAO.getProducts();
+        return ret;
     }
 
     /**

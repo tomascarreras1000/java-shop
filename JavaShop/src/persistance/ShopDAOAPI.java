@@ -111,10 +111,8 @@ public class ShopDAOAPI implements ShopDAO {
                     response.append(line);
                 }
                 reader.close();
-
-                System.out.println("Response: " + response.toString());
             } else {
-                System.out.println("Failed to create shop, HTTP response code: " + responseCode);
+                throw new APINotWorkingException("Failed to create shop, HTTP response code: " + responseCode);
             }
 
         } catch (IOException e) {
@@ -123,7 +121,7 @@ public class ShopDAOAPI implements ShopDAO {
     }
 
     public LinkedList<Shop> getShops() throws APINotWorkingException {
-
+        LinkedList<Shop> shops = new LinkedList<>();
         try {
             URL url = new URL(String.format(API_URL_TEMPLATE_SHOPS, groupId));
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -192,14 +190,15 @@ public class ShopDAOAPI implements ShopDAO {
                         }
                     }
                 }
+                return shops;  // Ensure this is inside the `if (responseCode == HttpURLConnection.HTTP_OK)` block
             } else {
                 throw new APINotWorkingException("Failed to fetch shops, HTTP response code: " + responseCode);
             }
         } catch (IOException e) {
-            throw new APINotWorkingException("Error: The API isn’t available.\n");
+            throw new APINotWorkingException("Error: The API isn’t available.\n" + e.getMessage());
         }
-        return null;
     }
+
 
     public void checkStatus() throws APINotWorkingException {
         try {
@@ -269,7 +268,7 @@ public class ShopDAOAPI implements ShopDAO {
         } catch (IOException e) {
             throw new APINotWorkingException("Error: The API isn’t available.\n");
         }
-        return null;
+        //return null;
     }
 
     private String buildUrlWithParameters(String groupId, String name, String description, Integer foundation, String businessModel, Float totalEarnings) {
@@ -308,7 +307,7 @@ public class ShopDAOAPI implements ShopDAO {
         } catch (IOException e) {
             throw new APINotWorkingException("Error: The API isn’t available.\n");
         }
-        return null;
+        //return null;
     }
 
     private JsonObject LoyaltyShopToJsonObject(LoyaltyShop loyaltyShop) {
