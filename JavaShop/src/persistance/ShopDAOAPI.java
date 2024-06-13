@@ -39,14 +39,41 @@ public class ShopDAOAPI implements ShopDAO {
 
     @Override
     public void removeShop(Shop shopToRemove) throws APINotWorkingException {
+
+        for(int i = 0; i < getShops().size(); i++){
+            if(getShops().get(i).getName().equals(shopToRemove.getName())){
+                removeShop(i);
+                break;
+            }
+        }
+
     }
 
     @Override
     public void updateShops(Shop shopToUpdate) throws APINotWorkingException {
+
+        LinkedList<Shop> shopList = getShops();
+        for (int i = 0; i < shopList.size(); i++) {
+            if (shopList.get(i).getName().equals(shopToUpdate.getName())) {
+                removeShop(i);
+                createShop(shopToUpdate);
+                break;
+            }
+        }
+
     }
 
     @Override
     public void updateShops(LinkedList<Shop> shopList) {
+
+        for (Shop shop : shopList) {
+            try {
+                updateShops(shop);
+            } catch (APINotWorkingException e) {
+                e.printStackTrace();
+            }
+        }
+
     }
 
     /*****************************DONE*********************************/
@@ -115,7 +142,7 @@ public class ShopDAOAPI implements ShopDAO {
 
                 Type shopListType = new TypeToken<LinkedList<Shop>>() {
                 }.getType();
-                return gson.fromJson(response.toString(), shopListType);
+                return gson.fromJson(response.toString(),shopListType);
             } else {
                 System.out.println("Failed to fetch shops, HTTP response code: " + responseCode);
             }
