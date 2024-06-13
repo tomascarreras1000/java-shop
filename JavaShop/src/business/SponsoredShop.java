@@ -52,18 +52,18 @@ public class SponsoredShop extends Shop {
         return newEarnings;
     }
     public float calculateOriginalPriceSponsored(RetailProduct product) {
-        float newPrice = product.getRetailPrice() / (1 + (10 / 100));
+        float newPrice = product.getRetailPrice() / (1f + (10f / 100f));
         switch (product.getCategory()) {
             case "General":
-                return newPrice / (1 + (21 / 100));
+                return newPrice / (1f + (21f / 100f));
             case "Reduced":
                 if (product.getAverageStars() > 3.5)
-                    return newPrice / (1 + (5 / 100));
-                return newPrice / (1 + (10 / 100));
+                    return newPrice / (1f + (5f / 100f));
+                return newPrice / (1f + (10f / 100f));
             case "SuperReduced":
                 if (product.getRetailPrice() > 100)
                     return newPrice;
-                return newPrice / (1 + (4 / 100));
+                return newPrice / (1f + (4f / 100f));
             default:
                 return newPrice;
         }

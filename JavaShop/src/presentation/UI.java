@@ -20,30 +20,43 @@ public class UI {
     }
 
     public void intro() {
-        System.out.println("\nWelcome to elCofre Digital Shopping Experiences.\n");
+        System.out.print("\nWelcome to elCofre Digital Shopping Experiences.\n\n");
     }
 
     public void showMainMenu() {
-        System.out.println("\n    1) Manage Products");
-        System.out.println("    2) Manage Shops");
-        System.out.println("    3) Search Products");
-        System.out.println("    4) List Shops");
-        System.out.println("    5) Your Cart\n");
-        System.out.println("    6) Exit\n");
-
+        System.out.print("""
+        
+            1) Manage Products
+            2) Manage Shops
+            3) Search Products
+            4) List Shops
+            5) Your Cart
+        
+            6) Exit
+            
+        """);
     }
 
     public void showProductsMenu() {
-        showMessage("\n    1) Create a Product");
-        showMessage("    2) Remove a Product");
-        showMessage("\n    3) Back");
+        System.out.print("""
+            
+            1) Create a Product
+            2) Remove a Product
+            3) Back
+            
+        """);
     }
 
     public void showShopsMenu() {
-        showMessage("\n    1) Create a Shop");
-        showMessage("    2) Expand a Shop's Catalogue");
-        showMessage("    3) Reduce a Shop's Catalogue");
-        showMessage("\n    4) Back");
+        System.out.print("""
+            
+            1) Create a Shop
+            2) Expand a Shop's Catalogue
+            3) Reduce a Shop's Catalogue
+            
+            4) Back
+            
+        """);
     }
 
     /**

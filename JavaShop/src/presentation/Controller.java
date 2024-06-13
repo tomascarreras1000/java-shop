@@ -3,9 +3,8 @@ package presentation;
 import business.*;
 import exceptions.*;
 
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
+import java.io.FileNotFoundException;
+import java.util.*;
 
 public class Controller {
     private final UI ui;
@@ -25,7 +24,7 @@ public class Controller {
         int option;
         do {
             ui.showMainMenu();
-            option = ui.askForInteger("\nChoose an option: ");
+            option = ui.askForInteger("Choose an option: ");
             try {
                 executeMenu(option);
             } catch (Exception | PersistanceException | BusinessException e) {
@@ -65,7 +64,7 @@ public class Controller {
         int option;
         do {
             ui.showProductsMenu();
-            option = ui.askForInteger("\nChoose an option: ");
+            option = ui.askForInteger("Choose an option: ");
             try {
                 executeProductsMenu(option);
             } catch (Exception | PersistanceException e) {
@@ -100,11 +99,12 @@ public class Controller {
 
         ui.showMessage("\nThe system supports the following product categories: ");
         ui.showMessage("""
-                 A) General
-                 B) Reduced Taxes
-                 C) Superreduced Taxes\
+                    
+                    A) General
+                    B) Reduced Taxes
+                    C) Super reduced Taxes
                 """);
-        String productCategory = ui.askForString("\nPlease pick the product’s category: ");
+        String productCategory = ui.askForString("Please pick the product’s category: ");
         productManager.createBaseProduct(productName, productBrand, productCategory, (float) productMaxPrice);
         ui.showMessage("\nThe product \"" + productName + "\" by \"" + productBrand + "\" was added to the system.");
     }
@@ -112,13 +112,13 @@ public class Controller {
     private void productsOptionTwo() throws PersistanceException, Exception {
         List<BaseProduct> productList = productManager.getBaseProducts();
         if (productList.isEmpty()) {
-            ui.showMessage("There are currently no products available.");
+            ui.showMessage("\nThere are currently no products available.");
             return;
         }
 
         boolean continueRemoving = true;
         while (continueRemoving) {
-            ui.showMessage("These are the currently available products: \n");
+            ui.showMessage("\nThese are the currently available products: \n");
             ui.showMessage("0. Back\n");
             for (int i = 0; i < productList.size(); i++) {
                 Product product = productList.get(i);
@@ -151,7 +151,7 @@ public class Controller {
         int option;
         do {
             ui.showShopsMenu();
-            option = ui.askForInteger("\nChoose an option: ");
+            option = ui.askForInteger("Choose an option: ");
             try {
                 executeShopsMenu(option);
             } catch (Exception | BusinessException | PersistanceException e) {
@@ -204,19 +204,19 @@ public class Controller {
         // Business model field/s
         ui.showMessage("\nThe system supports the following business models: \n");
         ui.showMessage("""
-                 \tA) Maximum Benefits
-                 \tB) Loyalty
-                 \tC) Sponsored\
+                    A) Maximum Benefits
+                    B) Loyalty
+                    C) Sponsored
                 """);
-        String shopBusinessModel = ui.askForString("\nPlease pick the shop’s business model: ");
+        String shopBusinessModel = ui.askForString("Please pick the shop’s business model: ");
         shopBusinessModel = shopManager.getBusinessModelFromOptions(shopBusinessModel);
         if (shopBusinessModel == null) {
             throw new Exception("\nERROR: Choose a valid business model!");
         } else if (shopBusinessModel.equals("Loyalty")) {
-            float loyaltyThreshold = ui.askForFloat("\nPlease enter the shop's loyalty threshold: ");
+            float loyaltyThreshold = ui.askForFloat("Please enter the shop's loyalty threshold: ");
             shopManager.createShop(shopName, shopDescription, shopFoundationYear, loyaltyThreshold);
         } else if (shopBusinessModel.equals("Sponsored")) {
-            String sponsorBrand = ui.askForString("\nPlease enter the shop's sponsor brand: ");
+            String sponsorBrand = ui.askForString("Please enter the shop's sponsor brand: ");
             shopManager.createShop(shopName, shopDescription, shopFoundationYear, sponsorBrand);
         } else {
             shopManager.createShop(shopName, shopDescription, shopFoundationYear);
@@ -251,12 +251,12 @@ public class Controller {
         String productBrand = product.getBrand();
         shopManager.addProductToShop(shopName, productManager.createRetailProductFromBaseProduct(product, currentPrice));
 
-        ui.showMessage("\"" + productName + "\" by \"" + productBrand + "\" is now being sold at \"" + shopName + "\".");
+        ui.showMessage("\n\"" + productName + "\" by \"" + productBrand + "\" is now being sold at \"" + shopName + "\".");
     }
 
     private void shopsOptionThree() throws PersistanceException, BusinessException, Exception {
         // Name field
-        String shopName = ui.askForString("Please enter the shop’s name: ");
+        String shopName = ui.askForString("\nPlease enter the shop’s name: ");
         Shop shop = shopManager.findShopByName(shopName);
         if (shop == null)
             throw new ShopNotFoundException(shopName);
@@ -264,11 +264,11 @@ public class Controller {
         LinkedList<RetailProduct> catalog = shop.getCatalogue();
 
         if (catalog.isEmpty()) {
-            ui.showMessage("This shop currently has no products in its catalog.");
+            ui.showMessage("\nThis shop currently has no products in its catalog.");
             return;
         }
 
-        ui.showMessage("This shop sells the following products: \n0. Back\n");
+        ui.showMessage("\nThis shop sells the following products: \n0. Back\n");
         for (int i = 0; i < catalog.size(); i++) {
             Product product = catalog.get(i);
             ui.showMessage((i + 1) + ". " + product.getDescription());
@@ -286,7 +286,7 @@ public class Controller {
             String productBrand = selectedProduct.getBrand();
 
             shopManager.removeRetailProductFromShop(shop, selectedProduct);
-            ui.showMessage("\"" + productName + "\" by \"" + productBrand + "\" is no longer being sold at \"" + shopName + "\".");
+            ui.showMessage("\n\"" + productName + "\" by \"" + productBrand + "\" is no longer being sold at \"" + shopName + "\".");
 
         }
     }
@@ -301,7 +301,7 @@ public class Controller {
             return;
         }
 
-        ui.showMessage("\nThe following products were found:");
+        ui.showMessage("\nThe following products were found:\n");
         int index = 1;
         for (Product product : products) {
             ui.showMessage("\t" + index + ") \"" + product.getName() + "\" by \"" + product.getBrand() + "\"");
@@ -310,33 +310,35 @@ public class Controller {
             if (sellingShops.isEmpty()) {
                 ui.showMessage("\tThis product is not currently being sold in any shop.");
             } else {
+                ui.showMessage("\t\tSold at:");
                 for (Shop sellingShop : sellingShops) {
-                    ui.showMessage("\t\tSold at:");
                     float price = sellingShop.getPriceFromProduct(product);
                     ui.showMessage("\t\t\t- " + sellingShop.getName() + ": " + price);
                 }
             }
             index++;
         }
-        ui.showMessage("\t" + index + ") Back");
+        ui.showMessage("\n\t" + index + ") Back");
 
-        int choice = ui.askForInteger("Select a product: ");
+        int choice = ui.askForInteger("\nSelect a product: ");
         if (choice == index) {
             return;
         }
         if (choice < 1 || choice > products.size()) {
-            ui.showMessage("Invalid choice. Please enter a valid option.");
+            ui.showMessage("\nInvalid choice. Please enter a valid option.");
             return;
         }
 
         BaseProduct selectedProduct = products.get(choice - 1);
 
         ui.showMessage("""
+                        
                 What would you like to do?
-                \t1) Read Reviews
-                \t2) Review Product
-                                
-                \t3) Back
+                        
+                    1) Read Reviews
+                    2) Review Product
+                              
+                    3) Back
                 """);
         int reviewOption = ui.askForInteger("Choose an option: ");
 
@@ -348,7 +350,7 @@ public class Controller {
                     return;
                 }
 
-                ui.showMessage("\nThese are the reviews for \"" + selectedProduct.getName() + "\" by \"" + selectedProduct.getBrand() + "\":");
+                ui.showMessage("\nThese are the reviews for \"" + selectedProduct.getName() + "\" by \"" + selectedProduct.getBrand() + "\":\n");
                 float totalStars = 0;
                 for (ProductReview review : reviews) {
                     ui.showMessage("\t" + review.getReviewAsText());
@@ -356,7 +358,7 @@ public class Controller {
                 }
 
                 float averageRating = totalStars / reviews.size();
-                ui.showMessage("\nAverage rating: " + String.format("%.2f", averageRating) + "*"); // TODO: double check this
+                ui.showMessage("\nAverage rating: " + String.format("%.2f", averageRating) + "*");
                 break;
             case 2:
                 int stars = ui.askForInteger("\nRate the product from 1 to 5: ");
@@ -426,7 +428,7 @@ public class Controller {
         int productOption = ui.askForInteger("Choose an option: ");
         switch (productOption) {
             case 1:
-                List<ProductReview> reviews = (baseProduct).getReviews();
+                List<ProductReview> reviews = baseProduct.getReviews();
                 if (reviews.isEmpty()) {
                     ui.showMessage("There are no reviews for this product yet.");
                     return;
@@ -440,7 +442,7 @@ public class Controller {
                 }
 
                 float averageRating = totalStars / reviews.size();
-                ui.showMessage("\nAverage rating: " + String.format("%.2f", averageRating) + "*"); // TODO: double check this
+                ui.showMessage("\nAverage rating: " + String.format("%.2f", averageRating) + "*");
                 break;
             case 2:
                 int stars = ui.askForInteger("\nRate the product from 1 to 5: ");
@@ -462,18 +464,19 @@ public class Controller {
         }
     }
 
-    private void runCartMenu() {
+    private void runCartMenu() throws PersistanceException, BusinessException {
         HashMap<String, LinkedList<RetailProduct>> cart = cartManager.getCart();
         if (cart.isEmpty()) {
             ui.showMessage("Your cart is empty.");
         } else {
             ui.showMessage("Your cart contains the following items:");
             float total = 0;
-            for (LinkedList<RetailProduct> list : cart.values()) {
-                for (RetailProduct retailProduct : list) {
+            for (String shopName : cart.keySet()) {
+                for (RetailProduct retailProduct : cart.get(shopName)) {
                     ui.showMessage("\t- \"" + retailProduct.getName() + "\" by \"" + retailProduct.getBrand() + "\"\n");
-                    ui.showMessage("\t\tPrice: " + retailProduct.getRetailPrice() + "\n");
-                    total += retailProduct.getRetailPrice();
+                    Shop shop = shopManager.findShopByName(shopName);
+                    ui.showMessage("\t\tPrice: " + String.format("%.2f", shop.getProductPrice(retailProduct)) + "\n");
+                    total += shop.getProductPrice(retailProduct);
                 }
             }
             ui.showMessage("Total: " + total);
@@ -488,7 +491,22 @@ public class Controller {
             case 1:
                 String confirmCheckout = ui.askForString("Are you sure you want to checkout? ");
                 if (confirmCheckout.equalsIgnoreCase("YES")) {
-                    // TODO: Compra
+                    for (String shopName : cart.keySet()) {
+                        Shop shop = shopManager.findShopByName(shopName);
+                        float shopEarnings = shop.purchaseProducts(cart.get(shopName));
+                        shopManager.updateShop(shop);
+                        boolean hasLoyaltyThreshold = false;
+                        if (shopEarnings < 0) {
+                            hasLoyaltyThreshold = true;
+                            shopEarnings *= -1f;
+                        }
+                        ui.showMessage("\"" + shopName + "\" has earned " + String.format("%.2f", shopEarnings) + " for a historic total of " + String.format("%.2f", shop.getEarnings()));
+                        if (hasLoyaltyThreshold)
+                            ui.showMessage("You are a regular at \"" + shopName + "\".");
+                    }
+
+                    cartManager.clearCart();
+                    ui.showMessage("\nYour cart has been cleared.");
                 } else {
                     ui.showMessage("Checkout cancelled.");
                 }
