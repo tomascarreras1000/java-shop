@@ -36,6 +36,7 @@ public class SponsoredShop extends Shop {
         for (RetailProduct product : products) {
             newEarnings = newEarnings + getPriceFromProduct(product);
         }
+        this.earnings += newEarnings;
         return newEarnings;
     }
 
