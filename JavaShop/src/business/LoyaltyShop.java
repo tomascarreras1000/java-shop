@@ -1,5 +1,7 @@
 package business;
 
+import exceptions.BusinessException;
+
 import java.util.LinkedList;
 
 public class LoyaltyShop extends Shop {
@@ -36,5 +38,39 @@ public class LoyaltyShop extends Shop {
 
     public float getCurrentLoyalty() {
         return currentLoyalty;
+    }
+
+    public float purchaseProducts(LinkedList<RetailProduct> products) throws BusinessException {
+        float newEarnings = 0;
+
+        for (RetailProduct product : products) {
+            if (loyaltyThreshold >= currentLoyalty)
+                newEarnings = newEarnings + calculateOriginalPrice(product);
+            else newEarnings = newEarnings + calculateOriginalPriceLoyalty(product);
+        }
+
+        this.earnings += newEarnings;
+        this.currentLoyalty += newEarnings;
+
+        if (loyaltyThreshold >= currentLoyalty)
+            return newEarnings*(-1);
+        return newEarnings;
+    }
+    public float calculateOriginalPriceLoyalty(RetailProduct product) {
+        float newPrice = calculateOriginalPrice(product);
+        switch (product.getCategory()) {
+            case "General":
+                return newPrice / (1 + (21 / 100));
+            case "Reduced":
+                if (product.getAverageStars() > 3.5)
+                    return newPrice / (1 + (5 / 100));
+                return newPrice / (1 + (10 / 100));
+            case "SuperReduced":
+                if (product.getRetailPrice() > 100)
+                    return newPrice;
+                return newPrice / (1 + (4 / 100));
+            default:
+                return newPrice;
+        }
     }
 }

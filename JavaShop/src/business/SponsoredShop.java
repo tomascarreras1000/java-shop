@@ -27,21 +27,32 @@ public class SponsoredShop extends Shop {
     }
 
     public String getSponsorBrand() {
-        return sponsorBrand;
+        return this.sponsorBrand;
     }
 
     @Override
     public float purchaseProducts(LinkedList<RetailProduct> products) throws BusinessException {
         float newEarnings = 0;
+        boolean isSponsored = false;
+
         for (RetailProduct product : products) {
-            newEarnings = newEarnings + getPriceFromProduct(product);
+            if (product.getBrand().equals(this.sponsorBrand)) {
+                isSponsored = true;
+                break;
+            }
         }
+
+        for (RetailProduct product : products) {
+            if (!isSponsored)
+                newEarnings = newEarnings + calculateOriginalPrice(product);
+            else newEarnings = newEarnings + calculateOriginalPriceSponsored(product);
+        }
+
         this.earnings += newEarnings;
         return newEarnings;
     }
-
-    public float getPriceFromSponsoredProduct(RetailProduct product) {
-        float newPrice = product.getRetailPrice() / (1 + (21 / 100));
+    public float calculateOriginalPriceSponsored(RetailProduct product) {
+        float newPrice = product.getRetailPrice() / (1 + (10 / 100));
         switch (product.getCategory()) {
             case "General":
                 return newPrice / (1 + (21 / 100));

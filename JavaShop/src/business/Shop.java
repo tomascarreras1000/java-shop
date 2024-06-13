@@ -56,13 +56,11 @@ public abstract class Shop {
     public float purchaseProducts(LinkedList<RetailProduct> products) throws BusinessException {
         float newEarnings = 0;
         for (RetailProduct product : products) {
-            newEarnings = newEarnings + getPriceFromProduct(product);
+            newEarnings = newEarnings + calculateOriginalPrice(product);
         }
         this.earnings = this.earnings + newEarnings;
         return newEarnings;
     }
-
-    //TODO: implement this method
     public float calculateOriginalPrice(RetailProduct product) {
         switch (product.getCategory()) {
             case "General":
