@@ -105,4 +105,8 @@ public class ShopManager {
     public LinkedList<Shop> getShops() throws PersistanceException {
         return shopDAO.getShops();
     }
+
+    public void updateShop(Shop shop) throws PersistanceException {
+        shopDAO.updateShops(shop);
+    }
 }

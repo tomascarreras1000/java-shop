@@ -25,7 +25,7 @@ public class LoyaltyShop extends Shop {
         this.since = since;
         this.earnings = earnings;
         this.loyaltyThreshold = loyaltyThreshold;
-        this.currentLoyalty = 0f;
+        this.currentLoyalty = earnings;
         this.catalogue = catalogue;
     }
 
@@ -43,9 +43,10 @@ public class LoyaltyShop extends Shop {
 
     public float purchaseProducts(LinkedList<RetailProduct> products) throws BusinessException {
         float newEarnings = 0;
+        float initialLoyalty = currentLoyalty;
 
         for (RetailProduct product : products) {
-            if (loyaltyThreshold >= currentLoyalty)
+            if (currentLoyalty >= loyaltyThreshold)
                 newEarnings = newEarnings + calculateOriginalPrice(product);
             else newEarnings = newEarnings + calculateOriginalPriceLoyalty(product);
         }
@@ -53,31 +54,34 @@ public class LoyaltyShop extends Shop {
         this.earnings += newEarnings;
         this.currentLoyalty += newEarnings;
 
-        if (loyaltyThreshold >= currentLoyalty)
+        if (currentLoyalty >= loyaltyThreshold && initialLoyalty < loyaltyThreshold)
             return newEarnings*(-1);
         return newEarnings;
     }
+
     public float calculateOriginalPriceLoyalty(RetailProduct product) {
         float newPrice = calculateOriginalPrice(product);
         switch (product.getCategory()) {
             case "General":
-                return newPrice / (1 + (21 / 100));
+                return newPrice / (1f + (21f / 100f));
             case "Reduced":
                 if (product.getAverageStars() > 3.5)
-                    return newPrice / (1 + (5 / 100));
-                return newPrice / (1 + (10 / 100));
+                    return newPrice / (1f + (5f / 100f));
+                return newPrice / (1f + (10f / 100f));
             case "SuperReduced":
                 if (product.getRetailPrice() > 100)
                     return newPrice;
-                return newPrice / (1 + (4 / 100));
+                return newPrice / (1f + (4f / 100f));
             default:
                 return newPrice;
         }
     }
     @Override
     public float getProductPrice(RetailProduct product) {
-        if (currentLoyalty >= loyaltyThreshold)
+        if (currentLoyalty >= loyaltyThreshold) {
+            System.out.printf(String.valueOf(calculateOriginalPrice(product)));
             return calculateOriginalPrice(product);
+        }
         return product.getRetailPrice();
     }
 }

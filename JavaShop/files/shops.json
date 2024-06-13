@@ -79,6 +79,37 @@
         "name": "IED",
         "brand": "ISIS S.A",
         "category": "Reduced"
+      },
+      {
+        "retailPrice": 123.0,
+        "averageStars": 0.0,
+        "name": "Pitos en vinagre",
+        "brand": "Tu Madre",
+        "category": "Super Reduced"
+      }
+    ]
+  },
+  {
+    "name": "Royal",
+    "description": "Very loyal",
+    "since": 213,
+    "earnings": 330.0,
+    "businessModel": "LOYALTY",
+    "loyaltyThreshold": 100.0,
+    "catalogue": [
+      {
+        "retailPrice": 110.0,
+        "averageStars": 0.0,
+        "name": "Pitos en vinagre",
+        "brand": "Tu Madre",
+        "category": "Super Reduced"
+      },
+      {
+        "retailPrice": 10.0,
+        "averageStars": 0.0,
+        "name": "IED",
+        "brand": "ISIS S.A",
+        "category": "Reduced"
       }
     ]
   }

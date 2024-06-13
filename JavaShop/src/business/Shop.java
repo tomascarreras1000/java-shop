@@ -54,7 +54,7 @@ public abstract class Shop {
      * @throws BusinessException
      */
     public float purchaseProducts(LinkedList<RetailProduct> products) throws BusinessException {
-        float newEarnings = 0;
+        float newEarnings = 0f;
         for (RetailProduct product : products) {
             newEarnings = newEarnings + calculateOriginalPrice(product);
         }
@@ -64,15 +64,15 @@ public abstract class Shop {
     public float calculateOriginalPrice(RetailProduct product) {
         switch (product.getCategory()) {
             case "General":
-                return product.getRetailPrice() / (1 + (21 / 100));
+                return product.getRetailPrice() / (1f + (21f / 100f));
             case "Reduced":
-                if (product.getAverageStars() > 3.5)
-                    return product.getRetailPrice() / (1 + (5 / 100));
-                return product.getRetailPrice() / (1 + (10 / 100));
+                if (product.getAverageStars() > 3.5f)
+                    return product.getRetailPrice() / (1f + (5f / 100f));
+                return product.getRetailPrice() / (1f + (10f / 100f));
             case "SuperReduced":
-                if (product.getRetailPrice() > 100)
+                if (product.getRetailPrice() > 100f)
                     return product.getRetailPrice();
-                return product.getRetailPrice() / (1 + (4 / 100));
+                return product.getRetailPrice() / (1f + (4f / 100f));
             default:
                 return product.getRetailPrice();
         }
