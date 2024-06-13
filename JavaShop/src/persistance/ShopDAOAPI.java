@@ -34,9 +34,6 @@ public class ShopDAOAPI implements ShopDAO {
         this.gson = new Gson();
     }
 
-    //TODO: Check if they work with the different types of shops
-    //TODO: Implement the following methods
-
     @Override
     public void removeShop(Shop shopToRemove) throws APINotWorkingException {
     }
@@ -85,13 +82,13 @@ public class ShopDAOAPI implements ShopDAO {
                 }
                 reader.close();
 
-                System.out.println("Response: " + response.toString());
+                throw new APINotWorkingException("Response: " + response.toString());
             } else {
-                System.out.println("Failed to create shop, HTTP response code: " + responseCode);
+                throw new APINotWorkingException("Failed to create shop, HTTP response code: " + responseCode);
             }
 
         } catch (IOException e) {
-            throw new APINotWorkingException(e.getMessage());
+            throw new APINotWorkingException("Error: The API isn’t available.\n");
         }
     }
 
@@ -117,12 +114,11 @@ public class ShopDAOAPI implements ShopDAO {
                 }.getType();
                 return gson.fromJson(response.toString(), shopListType);
             } else {
-                System.out.println("Failed to fetch shops, HTTP response code: " + responseCode);
+                throw new APINotWorkingException("Failed to fetch shops, HTTP response code: " + responseCode);
             }
         } catch (IOException e) {
-            throw new APINotWorkingException(e.getMessage());
+            throw new APINotWorkingException("Error: The API isn’t available.\n");
         }
-        return null;
     }
 
     public void checkStatus() throws APINotWorkingException {
@@ -136,7 +132,7 @@ public class ShopDAOAPI implements ShopDAO {
             if (responseCode != HttpURLConnection.HTTP_OK) // API is up and running!
                 throw new APINotWorkingException("Error: The API isn’t available.\n");
         } catch (IOException e) {
-            throw new APINotWorkingException(e.getMessage());
+            throw new APINotWorkingException("Error: The API isn’t available.\n");
         }
     }
 
@@ -158,10 +154,10 @@ public class ShopDAOAPI implements ShopDAO {
                 }
                 reader.close();
             } else {
-                System.out.println(connection.getResponseMessage());
+                throw new APINotWorkingException(connection.getResponseMessage());
             }
         } catch (IOException e) {
-            throw new APINotWorkingException(e.getMessage());
+            throw new APINotWorkingException("Error: The API isn’t available.\n");
         }
     }
 
@@ -188,12 +184,11 @@ public class ShopDAOAPI implements ShopDAO {
                 }.getType();
                 return gson.fromJson(response.toString(), shopListType);
             } else {
-                System.out.println("Failed to search shops, HTTP response code: " + responseCode);
+                throw new APINotWorkingException("Failed to search shops, HTTP response code: " + responseCode);
             }
         } catch (IOException e) {
-            throw new APINotWorkingException(e.getMessage());
+            throw new APINotWorkingException("Error: The API isn’t available.\n");
         }
-        return null;
     }
 
     private String buildUrlWithParameters(String groupId, String name, String description, Integer foundation, String businessModel, Float totalEarnings) {
@@ -227,12 +222,11 @@ public class ShopDAOAPI implements ShopDAO {
 
                 return gson.fromJson(response.toString(), Shop.class);
             } else {
-                System.out.println("Failed to retrieve shop, HTTP response code: " + responseCode);
+                throw new APINotWorkingException("Failed to retrieve shop, HTTP response code: " + responseCode);
             }
         } catch (IOException e) {
-            throw new APINotWorkingException(e.getMessage());
+            throw new APINotWorkingException("Error: The API isn’t available.\n");
         }
-        return null;
     }
 
     private JsonObject LoyaltyShopToJsonObject(LoyaltyShop loyaltyShop) {
