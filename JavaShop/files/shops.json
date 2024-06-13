@@ -33,6 +33,49 @@
     "catalogue": [
       {
         "retailPrice": 10.0,
+        "averageStars": 0.0,
+        "name": "IED",
+        "brand": "ISIS S.A",
+        "category": "Reduced"
+      }
+    ]
+  },
+  {
+    "name": "asdf",
+    "description": "asdf",
+    "since": 123,
+    "earnings": 0.0,
+    "businessModel": "LOYALTY",
+    "loyaltyThreshold": 12.0,
+    "catalogue": []
+  },
+  {
+    "name": "adsada",
+    "description": "asdasds",
+    "since": 123,
+    "earnings": 0.0,
+    "sponsorBrand": "bbb",
+    "businessModel": "SPONSORED",
+    "catalogue": []
+  },
+  {
+    "name": "addsasda",
+    "description": "asdadasd",
+    "since": 123,
+    "earnings": 0.0,
+    "businessModel": "MAX_PROFIT",
+    "catalogue": []
+  },
+  {
+    "name": "asd",
+    "description": "asd",
+    "since": 123,
+    "earnings": 0.0,
+    "businessModel": "MAX_PROFIT",
+    "catalogue": [
+      {
+        "retailPrice": 12.0,
+        "averageStars": 0.0,
         "name": "IED",
         "brand": "ISIS S.A",
         "category": "Reduced"

@@ -1,14 +1,1 @@
-[
-    {
-        "maxRetailPrice": 20.0,
-        "reviews": [
-            {
-                "text": "Great product! Helped me and my cousin (R.I.P) get rid of some infidels",
-                "stars": 5
-            }
-        ],
-        "name": "IED",
-        "brand": "ISIS S.A",
-        "category": "Reduced"
-    }
-]
+[{"maxRetailPrice":20.0,"reviews":[{"text":"Great product! Helped me and my cousin (R.I.P) get rid of some infidels","stars":5}],"name":"IED","brand":"ISIS S.A","category":"Reduced"}]
