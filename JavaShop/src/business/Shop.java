@@ -77,4 +77,7 @@ public abstract class Shop {
                 return product.getRetailPrice();
         }
     }
+    public float getProductPrice(RetailProduct product) {
+        return product.getRetailPrice();
+    }
 }

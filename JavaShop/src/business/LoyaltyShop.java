@@ -74,4 +74,10 @@ public class LoyaltyShop extends Shop {
                 return newPrice;
         }
     }
+    @Override
+    public float getProductPrice(RetailProduct product) {
+        if (currentLoyalty >= loyaltyThreshold)
+            return calculateOriginalPrice(product);
+        return product.getRetailPrice();
+    }
 }
