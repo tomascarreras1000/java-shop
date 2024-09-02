@@ -1,1 +1,1 @@
-# shitass-java-shop
+# java-shop
